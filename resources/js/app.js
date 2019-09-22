@@ -7,6 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+Vue.use(require('vue-chat-scroll'));
 
 /**
  * The following block of code may be used to automatically register your
@@ -19,8 +20,10 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-
+Vue.component('chat-component', require('./components/ChatComponent.vue').default);
+Vue.component('message-component', require('./components/MessageComponent.vue').default);
+Vue.component('input-component', require('./components/InputComponent.vue').default);
+Vue.component('dropdown', require('./components/DropDown.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
