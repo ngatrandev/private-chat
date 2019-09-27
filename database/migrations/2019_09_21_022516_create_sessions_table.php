@@ -15,8 +15,11 @@ class CreateSessionsTable extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user1_id')->unique();
-            $table->unsignedBigInteger('user2_id')->unique();
+            $table->string('user1_name');
+            $table->unsignedBigInteger('user1_id');
+            $table->unsignedBigInteger('user2_id');
+            $table->boolean('accept')->default(false);
+            $table->boolean('block')->default(false);
             $table->timestamps();
         });
     }

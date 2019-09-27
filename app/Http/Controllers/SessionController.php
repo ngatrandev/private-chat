@@ -3,83 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Session;
+use App\User;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    //
+    public function store(User $user)
     {
-        //
+        //'/user/{user}/s' user trên route sẽ trùng với $user qua id.
+        $friend = User::whereEmail(request('email'))->first();
+        Session::create([
+            'user1_name'=>$user->name,
+            'user1_id'=>$user->id,
+            'user2_id'=>$friend->id
+        ]);
+
+        //return về view home khi send req từ Vue
+        // if(request()->wantsJson()) {
+        //     return ['message' => '/home/'];
+        // }
+       
+
+        // không viết return để tránh refresh page
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function update(Session $session)    
     {
-        //
+        $session->update(['accept'=>1]);
+       
     }
+    
+   
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Session  $session
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Session $session)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Session  $session
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Session $session)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Session  $session
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Session $session)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Session  $session
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Session $session)
-    {
-        //
-    }
 }

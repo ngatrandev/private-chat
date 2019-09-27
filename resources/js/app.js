@@ -6,6 +6,8 @@
 
 require('./bootstrap');
 
+const _ = require('lodash');
+
 window.Vue = require('vue');
 Vue.use(require('vue-chat-scroll'));
 
@@ -24,6 +26,8 @@ Vue.component('chat-component', require('./components/ChatComponent.vue').defaul
 Vue.component('message-component', require('./components/MessageComponent.vue').default);
 Vue.component('input-component', require('./components/InputComponent.vue').default);
 Vue.component('dropdown', require('./components/DropDown.vue').default);
+Vue.component('friend-dropdown', require('./components/FriendDropDown.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

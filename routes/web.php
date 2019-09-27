@@ -15,10 +15,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['middleware'=>'auth'], function(){
+Route::post('/user/{user}/storesession', 'SessionController@store');
+//Muốn dùng id của user để tương thích với Controller phải viết đúng {user}
+Route::patch('/sessions/{session}/update', 'SessionController@update');
+
+Route::get('/getinvites', 'HomeController@getInvites');
+Route::get('/getfriends', 'HomeController@getFriends');
+});
+
