@@ -1,7 +1,7 @@
 <template>
-        <div class="w-3/4 border border-grey-light ">
+        <div v-show="isOpen" class="w-3/4 border border-grey-light ">
             <div class="flex bg-grey-light font-serif justify-between w-full py-2">
-                <h4>Chats</h4>
+                <h4>{{friend.name}}</h4>
                 <dropdown @blocked="blocked1" @unblocked="unblocked1" align=right width="200px"></dropdown>
             </div>
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
@@ -13,7 +13,7 @@
 <script>
 import DropDown from './DropDown'
 export default {
-    props: ['chats'],
+    props: ['chats', 'friend', 'isOpen'],
     components: {DropDown},
 
     methods: {

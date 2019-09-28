@@ -1903,6 +1903,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1922,6 +1929,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         message: 'How are u'
       }],
+      activeSessionId: '',
       block: false,
       form: {
         email: ''
@@ -1941,6 +1949,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     session_unblock: function session_unblock() {
       this.block = false;
+    },
+    showChat: function showChat(id) {
+      this.activeSessionId = id;
     },
     sendEmail: function () {
       var _sendEmail = _asyncToGenerator(
@@ -2295,7 +2306,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['chats'],
+  props: ['chats', 'friend', 'isOpen'],
   components: {
     DropDown: _DropDown__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -40514,8 +40525,17 @@ var render = function() {
                     "li",
                     {
                       staticClass:
-                        "flex justify-between text-blue border-b border-grey-lighter font-serif px-2 py-2",
-                      class: { "text-red line-through": _vm.block }
+                        "flex hover:bg-teal hover:text-black justify-between border-b border-grey-lighter font-serif px-2 py-2",
+                      class:
+                        _vm.activeSessionId == friend.sessionId
+                          ? "bg-pink text-black"
+                          : "text-blue",
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.showChat(friend.sessionId)
+                        }
+                      }
                     },
                     [_vm._v(_vm._s(friend.name) + "       \n                ")]
                   )
@@ -40559,18 +40579,35 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("message-component", {
-            attrs: { chats: _vm.chats },
-            on: {
-              block_toggle: _vm.session_block,
-              unblock_toggle: _vm.session_unblock
-            }
+          _vm._l(_vm.friendForm, function(friend) {
+            return _c("message-component", {
+              key: friend.sessionId,
+              attrs: {
+                friend: friend,
+                isOpen: _vm.activeSessionId == friend.sessionId,
+                chats: _vm.chats
+              },
+              on: {
+                block_toggle: _vm.session_block,
+                unblock_toggle: _vm.session_unblock
+              }
+            })
           })
         ],
-        1
+        2
       ),
       _vm._v(" "),
-      _c("input-component", { on: { input: _vm.submit } })
+      _c("input-component", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.activeSessionId > 0,
+            expression: "activeSessionId > 0"
+          }
+        ],
+        on: { input: _vm.submit }
+      })
     ],
     1
   )
@@ -40961,36 +40998,53 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-3/4 border border-grey-light " }, [
-    _c(
-      "div",
-      {
-        staticClass: "flex bg-grey-light font-serif justify-between w-full py-2"
-      },
-      [
-        _c("h4", [_vm._v("Chats")]),
-        _vm._v(" "),
-        _c("dropdown", {
-          attrs: { align: "right", width: "200px" },
-          on: { blocked: _vm.blocked1, unblocked: _vm.unblocked1 }
-        })
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.isOpen,
+          expression: "isOpen"
+        }
       ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "ul",
-      {
-        directives: [{ name: "chat-scroll", rawName: "v-chat-scroll" }],
-        staticClass: "list-reset overflow-y-scroll",
-        staticStyle: { height: "500px" }
-      },
-      _vm._l(_vm.chats, function(chat) {
-        return _c("li", { staticClass: "py-2" }, [_vm._v(_vm._s(chat.message))])
-      }),
-      0
-    )
-  ])
+      staticClass: "w-3/4 border border-grey-light "
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "flex bg-grey-light font-serif justify-between w-full py-2"
+        },
+        [
+          _c("h4", [_vm._v(_vm._s(_vm.friend.name))]),
+          _vm._v(" "),
+          _c("dropdown", {
+            attrs: { align: "right", width: "200px" },
+            on: { blocked: _vm.blocked1, unblocked: _vm.unblocked1 }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "ul",
+        {
+          directives: [{ name: "chat-scroll", rawName: "v-chat-scroll" }],
+          staticClass: "list-reset overflow-y-scroll",
+          staticStyle: { height: "500px" }
+        },
+        _vm._l(_vm.chats, function(chat) {
+          return _c("li", { staticClass: "py-2" }, [
+            _vm._v(_vm._s(chat.message))
+          ])
+        }),
+        0
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

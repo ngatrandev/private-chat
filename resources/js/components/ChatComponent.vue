@@ -12,8 +12,10 @@
                 
                 <ul   class="list-reset overflow-y-scroll relative" style="height:500px">
                     <li v-for="friend in friendForm" 
-                    :class="{'text-red line-through':block}"
-                    class="flex justify-between text-blue border-b border-grey-lighter font-serif px-2 py-2">{{friend.name}}       
+                    @click.prevent="showChat(friend.sessionId)"
+                   
+                    :class="activeSessionId==friend.sessionId ? 'bg-pink text-black': 'text-blue'"
+                    class="flex hover:bg-teal hover:text-black justify-between border-b border-grey-lighter font-serif px-2 py-2">{{friend.name}}       
                     </li>
                     <li v-for="invite in inviteForm" 
                     class="flex justify-between border-b border-grey-lighter font-serif px-2 py-2">{{invite.user1_name}}'s invitations
@@ -24,6 +26,10 @@
                 </ul>
             </div>
             <message-component
+            v-for="friend in friendForm"
+            :key="friend.sessionId"
+            :friend="friend"
+            :isOpen="activeSessionId==friend.sessionId"
             @block_toggle="session_block"
             @unblock_toggle="session_unblock"
             :chats="chats"
@@ -31,6 +37,7 @@
         </div>
         
         <input-component
+        v-show="activeSessionId > 0"
         @input="submit"
         ></input-component>
     </div>
@@ -41,7 +48,7 @@
     import InputComponent from './InputComponent';
     import FriendDropDown from './FriendDropDown';
     import _ from 'lodash';
-import { async } from 'q';
+    import { async } from 'q';
 
     export default {
        components: {MessageComponent, InputComponent, FriendDropDown},
@@ -49,6 +56,7 @@ import { async } from 'q';
        data() {
            return {
                chats: [{message: 'Hello'}, {message: 'How are u'} ],
+               activeSessionId: '',
                block: false,
                form: {email: ''},
                inviteForm : '',
@@ -66,6 +74,10 @@ import { async } from 'q';
 
            session_unblock() {
                this.block = false;
+           },
+
+           showChat(id) {
+               this.activeSessionId = id;
            },
 
            async sendEmail(e) {
