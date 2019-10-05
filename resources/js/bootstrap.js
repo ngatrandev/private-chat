@@ -53,3 +53,19 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+import Echo from "laravel-echo";
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'a354a7543683c70b8252',
+    cluster: 'ap1',
+    csrfToken: document.head.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    //do bị lỗi 419 nên phải add trực tiếp csrfToken vào Echo như trên
+    // lỗi này mất nhiều ngày để fix
+    // chạy php artisan config:cache để clear cache trong .env
+    
+  
+});

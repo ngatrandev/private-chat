@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChatCreate;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -22,7 +23,9 @@ class HomeController extends Controller
     public function index()
     {
         $user=Auth()->user();
+       
         return view('home', compact('user'));
+        
     }
 
     public function getInvites()

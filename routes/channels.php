@@ -11,6 +11,22 @@
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+
+
+Broadcast::channel('online', function ($user) {
+       
+            return['id'=>$user->id, 'name'=>$user->name];
+//trong mỗi object chỉ trả về id và name để tinh gọn
+      
 });
+
+Broadcast::channel('invite.{friendId}', function ($user, $friendId) {
+       
+    return $user->id == $friendId;
+});
+
+Broadcast::channel('accept.{userId}', function ($user, $userId) {
+       
+    return $user->id == $userId;
+});
+
