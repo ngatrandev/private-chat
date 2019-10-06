@@ -11,7 +11,7 @@
 |
 */
 
-
+use App\Session;
 
 Broadcast::channel('online', function ($user) {
        
@@ -28,5 +28,15 @@ Broadcast::channel('invite.{friendId}', function ($user, $friendId) {
 Broadcast::channel('accept.{userId}', function ($user, $userId) {
        
     return $user->id == $userId;
+});
+
+Broadcast::channel('message.{session}', function ($user, Session $session){
+    if($user->id == $session->user1_id||$user->id == $session->user2_id) {
+        return true;
+    }
+    return false;
+
+    //do có add class Session nên {session} chính là id của $session
+    // khác với cách viết {userId} ở channel trên
 });
 

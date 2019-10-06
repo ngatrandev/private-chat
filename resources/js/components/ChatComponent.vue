@@ -12,7 +12,7 @@
                 
                 <ul   class="list-reset overflow-y-scroll relative" style="height:500px">
                     <li v-for="friend in friendForm" 
-                    @click.prevent="showChat(friend.sessionId)"
+                    @click.prevent="showChat(friend.sessionId, friend.id)"
        
                     :class="activeSessionId==friend.sessionId ? 'bg-pink text-black': 'text-blue'"
                     class="flex hover:bg-teal hover:text-black justify-between border-b border-grey-lighter font-serif px-2 py-2">{{friend.name}}
@@ -36,15 +36,17 @@
             :key="friend.sessionId"
             :friend="friend"
             :isOpen="activeSessionId==friend.sessionId"
+            :id="id"
             @block_toggle="session_block"
             @unblock_toggle="session_unblock"
-            :chats="chats"
+           
+           
             ></message-component>
         </div>
         
         <input-component
         v-show="activeSessionId > 0"
-        @input="submit"
+        @input="send"
         ></input-component>
     </div>
 </template>
@@ -63,8 +65,9 @@
        props: ['id'],
        data() {
            return {
-               chats: [{message: 'Hello'}, {message: 'How are u'} ],
+            
                activeSessionId: '',
+               activeFriendId: '',
                block: false,
                form: {email: ''},
                inviteForm : '',
@@ -75,8 +78,12 @@
            }
        },
        methods: {
-           submit(value) {
-               this.chats.push({message: value})
+           async send(value) {
+             
+               await axios.post(`/send/${this.activeSessionId}`, {
+                   content: value,
+                   to_user: this.activeFriendId
+               })
            },
            session_block() {
                this.block = true;
@@ -86,8 +93,10 @@
                this.block = false;
            },
 
-           showChat(id) {
-               this.activeSessionId = id;
+           showChat(val1, val2) {
+               this.activeSessionId = val1;
+               this.activeFriendId = val2;
+             
            },
 
            async sendEmail(e) {
@@ -136,7 +145,11 @@
             // nên presence-channel 'online' bên dưới không chạy phải dùng function này để check lập tức
 
 
-           }
+           },
+
+           
+
+
            
                     
 
@@ -151,6 +164,7 @@
        created() {
           this.getFriends();
           this.getInvites();
+          
           
          
             Echo.join('online')
@@ -190,7 +204,7 @@
            Echo.private('invite.'+this.id)
            .listen('InviteEvent', ()=>{
                this.getInvites();
-               
+            //this.id không đổi cả quá trình nên có thể viết listen tại đây   
            });
 
            Echo.private('accept.'+this.id)
@@ -199,6 +213,11 @@
                this.getFriendsAndCheckOnline();
                
            });
+
+           // Không viết Echo.private('message.session_id)...ở đây
+           // vì mỗi lần auth chỉ có thể kèm theo 1 giá trị id nhất định và không thể thay đổi
+           // nhưng session_id thì có nhiều giá trị theo friend list
+           // phải viết bên created của MessageComponent mỗi <message-component> ứng với 1 session_id nên phù hợp
 
            
 

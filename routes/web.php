@@ -29,4 +29,7 @@ Route::patch('/sessions/{session}/update', 'SessionController@update');
 Route::get('/getinvites', 'HomeController@getInvites');
 Route::get('/getfriends', 'HomeController@getFriends');
 
+Route::post('/send/{session}', 'ChatController@storeMessage');
+Route::post('/session/{session}/chats', 'ChatController@chats');
+
 

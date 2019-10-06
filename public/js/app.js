@@ -1916,6 +1916,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -1930,12 +1932,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: ['id'],
   data: function data() {
     return {
-      chats: [{
-        message: 'Hello'
-      }, {
-        message: 'How are u'
-      }],
       activeSessionId: '',
+      activeFriendId: '',
       block: false,
       form: {
         email: ''
@@ -1946,33 +1944,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    submit: function submit(value) {
-      this.chats.push({
-        message: value
-      });
-    },
-    session_block: function session_block() {
-      this.block = true;
-    },
-    session_unblock: function session_unblock() {
-      this.block = false;
-    },
-    showChat: function showChat(id) {
-      this.activeSessionId = id;
-    },
-    sendEmail: function () {
-      var _sendEmail = _asyncToGenerator(
+    send: function () {
+      var _send = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(e) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(value) {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.form.email = e;
-                _context.next = 3;
-                return axios.post('/user/' + this.id + '/storesession', this.form);
+                _context.next = 2;
+                return axios.post("/send/".concat(this.activeSessionId), {
+                  content: value,
+                  to_user: this.activeFriendId
+                });
 
-              case 3:
+              case 2:
               case "end":
                 return _context.stop();
             }
@@ -1980,7 +1966,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee, this);
       }));
 
-      function sendEmail(_x) {
+      function send(_x) {
+        return _send.apply(this, arguments);
+      }
+
+      return send;
+    }(),
+    session_block: function session_block() {
+      this.block = true;
+    },
+    session_unblock: function session_unblock() {
+      this.block = false;
+    },
+    showChat: function showChat(val1, val2) {
+      this.activeSessionId = val1;
+      this.activeFriendId = val2;
+    },
+    sendEmail: function () {
+      var _sendEmail = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(e) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                this.form.email = e;
+                _context2.next = 3;
+                return axios.post('/user/' + this.id + '/storesession', this.form);
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function sendEmail(_x2) {
         return _sendEmail.apply(this, arguments);
       }
 
@@ -1989,23 +2011,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     accept: function () {
       var _accept = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(key) {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(key) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context2.next = 2;
+                _context3.next = 2;
                 return axios.patch('/sessions/' + key + '/update');
 
               case 2:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       }));
 
-      function accept(_x2) {
+      function accept(_x3) {
         return _accept.apply(this, arguments);
       }
 
@@ -2014,23 +2036,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getInvites: function () {
       var _getInvites = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context3.next = 2;
+                _context4.next = 2;
                 return axios.get('/getinvites');
 
               case 2:
-                this.inviteForm = _context3.sent.data.data;
+                this.inviteForm = _context4.sent.data.data;
 
               case 3:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
 
       function getInvites() {
@@ -2042,23 +2064,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getFriends: function () {
       var _getFriends = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context4.next = 2;
+                _context5.next = 2;
                 return axios.get('/getfriends');
 
               case 2:
-                this.friendForm = _context4.sent.data.data;
+                this.friendForm = _context5.sent.data.data;
 
               case 3:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
 
       function getFriends() {
@@ -2070,24 +2092,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getFriendsAndCheckOnline: function () {
       var _getFriendsAndCheckOnline = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                _context5.next = 2;
+                _context6.next = 2;
                 return axios.get('/getfriends');
 
               case 2:
-                this.friendForm = _context5.sent.data.data;
+                this.friendForm = _context6.sent.data.data;
                 this.checkOnline(); // check online lập tức sau khi await data pull vào friendForm
 
               case 4:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee6, this);
       }));
 
       function getFriendsAndCheckOnline() {
@@ -2148,13 +2170,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     //.leaving: user mới logout
 
     Echo["private"]('invite.' + this.id).listen('InviteEvent', function () {
-      _this2.getInvites();
+      _this2.getInvites(); //this.id không đổi cả quá trình nên có thể viết listen tại đây   
+
     });
     Echo["private"]('accept.' + this.id).listen('AcceptEvent', function () {
       _this2.getInvites();
 
       _this2.getFriendsAndCheckOnline();
-    });
+    }); // Không viết Echo.private('message.session_id)...ở đây
+    // vì mỗi lần auth chỉ có thể kèm theo 1 giá trị id nhất định và không thể thay đổi
+    // nhưng session_id thì có nhiều giá trị theo friend list
+    // phải viết bên created của MessageComponent mỗi <message-component> ứng với 1 session_id nên phù hợp
   }
 }); //message-component là chat area
 //input-component là thẻ input
@@ -2359,6 +2385,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     send: function send() {
       this.$emit('input', this.text);
+      this.text = '';
     }
   }
 }); //dùng submit.prevent để không refresh lại page
@@ -2374,7 +2401,23 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _DropDown__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropDown */ "./resources/js/components/DropDown.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _DropDown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropDown */ "./resources/js/components/DropDown.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2389,9 +2432,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['chats', 'friend', 'isOpen'],
+  props: ['friend', 'isOpen', 'id'],
   components: {
-    DropDown: _DropDown__WEBPACK_IMPORTED_MODULE_0__["default"]
+    DropDown: _DropDown__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      chats: [],
+      val: ''
+    };
   },
   methods: {
     blocked1: function blocked1() {
@@ -2399,10 +2448,74 @@ __webpack_require__.r(__webpack_exports__);
     },
     unblocked1: function unblocked1() {
       this.$emit('unblock_toggle');
-    }
+    },
+    getMessages: function () {
+      var _getMessages = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return axios.post("/session/".concat(this.friend.sessionId, "/chats"));
+
+              case 2:
+                this.chats = _context.sent.data.data;
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function getMessages() {
+        return _getMessages.apply(this, arguments);
+      }
+
+      return getMessages;
+    }()
+  },
+  created: function created() {
+    var _this = this;
+
+    Echo["private"]('message.' + this.friend.sessionId).listen('MessageEvent', function (e) {
+      if (_this.id == e.userId) {
+        _this.val = 0;
+      } else {
+        _this.val = 1; //val dùng để xác định mess được push vào là send hay recieve
+      }
+
+      _this.chats.push({
+        message: e.message,
+        type: _this.val
+      }); //khi send hoặc recieve mess mới không pull lại data từ data base
+      // mà qua listen event để thêm mess mới vào data của Vue
+      // làm cho mess được show nhanh hơn
+
+    });
+  },
+  watch: {
+    isOpen: function isOpen(_isOpen) {
+      if (_isOpen) {
+        this.getMessages();
+      } else {
+        this.chats = [];
+      }
+    } //dùng watch để theo dõi khi giá trị isOpen nếu có thay đổi sẽ chạy vào func bên trong
+    //cách này đơn giản hơn emit event từ parent đến child component
+    //bằng cách theo dõi prop từ parent để chạy func bên child component
+    //Ban đầu đăng nhập toàn bộ dữ liệu về mess đều rỗng
+    //khi click vào 1 bạn trong friend list do isOpen thay đổi
+    //chỉ pull 1 bộ data về mess với bạn đó show trên màn hình
+    //thay vì phải pull tất cả mess của toàn bộ friendlist
+
   }
 }); // dùng height và overflow-scroll để xuất hiện scroll bar
 // dùng v-chat-scroll để chế độ scroll phù hợp với kiểu chat
+// chỉ tô nền cho text thì để text trong thẻ <span></span>
 
 /***/ }),
 
@@ -50452,7 +50565,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.showChat(friend.sessionId)
+                          return _vm.showChat(friend.sessionId, friend.id)
                         }
                       }
                     },
@@ -50539,7 +50652,7 @@ var render = function() {
               attrs: {
                 friend: friend,
                 isOpen: _vm.activeSessionId == friend.sessionId,
-                chats: _vm.chats
+                id: _vm.id
               },
               on: {
                 block_toggle: _vm.session_block,
@@ -50560,7 +50673,7 @@ var render = function() {
             expression: "activeSessionId > 0"
           }
         ],
-        on: { input: _vm.submit }
+        on: { input: _vm.send }
       })
     ],
     1
@@ -50991,9 +51104,20 @@ var render = function() {
           staticStyle: { height: "500px" }
         },
         _vm._l(_vm.chats, function(chat) {
-          return _c("li", { staticClass: "py-2" }, [
-            _vm._v(_vm._s(chat.message))
-          ])
+          return _c(
+            "li",
+            {
+              staticClass: "py-2 px-2  ",
+              class: chat.type == 0 ? "text-right" : ""
+            },
+            [
+              _c("span", {
+                staticClass: "px-2 py-1 rounded shadow-lg text-sm",
+                class: chat.type == 0 ? "bg-blue-lighter" : "bg-pink-lighter",
+                domProps: { textContent: _vm._s(chat.message) }
+              })
+            ]
+          )
         }),
         0
       )

@@ -18,7 +18,7 @@ class SessionController extends Controller
 
         
 
-        Session::create([
+        $session = Session::create([
             'user1_name'=>$user->name,
             'user1_id'=>$user->id,
             'user2_id'=>$friend->id
@@ -26,6 +26,7 @@ class SessionController extends Controller
 
         $friendId = $friend->id;
         event(new InviteEvent($friendId))->toOthers();
+        
         
         
 
@@ -46,6 +47,8 @@ class SessionController extends Controller
         event(new AcceptEvent($session->user2_id));
         //phát cùng lúc 2 event với id khác nhau
         //vì đây là 2 user cần cập nhật lại friendlist
+
+        
        
     }
     

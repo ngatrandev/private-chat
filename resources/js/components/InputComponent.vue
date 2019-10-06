@@ -19,6 +19,7 @@ export default {
     methods: {
         send() {
             this.$emit('input', this.text);
+            this.text = '';
         }
     }
 }

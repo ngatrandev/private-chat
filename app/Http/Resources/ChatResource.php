@@ -14,6 +14,13 @@ class ChatResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'message' => $this->message['content'],
+            'id'=> $this->id,
+            'type'=>$this->type,
+            'send_at'=>$this->created_at->diffForHumans()
+            // chat vẫn trả về được message[content] vì đã có relation 
+        ];
+        
     }
 }
