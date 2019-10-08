@@ -41,7 +41,9 @@ export default {
 
         async getMessages() {
                this.chats = (await axios.post(`/session/${this.friend.sessionId}/chats`)).data.data;
-           }
+           },
+
+           
     },
 
     created() {
@@ -61,6 +63,8 @@ export default {
               // mà qua listen event để thêm mess mới vào data của Vue
               // làm cho mess được show nhanh hơn
            });
+
+          
 
         
     },

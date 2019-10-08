@@ -10,15 +10,19 @@
                     ></friend-dropdown>
                 </div>
                 
-                <ul   class="list-reset overflow-y-scroll relative" style="height:500px">
+                <ul   class="list-reset overflow-y-scroll relative " style="height:500px">
                     <li v-for="friend in friendForm" 
                     @click.prevent="showChat(friend.sessionId, friend.id)"
        
                     :class="activeSessionId==friend.sessionId ? 'bg-pink text-black': 'text-blue'"
-                    class="flex hover:bg-teal hover:text-black justify-between border-b border-grey-lighter font-serif px-2 py-2">{{friend.name}}
+                    class="flex hover:bg-teal hover:text-black justify-between border-b border-grey-lighter font-serif px-2 py-2">
+                    <div>
+                         <span>{{friend.name}}</span>
+                          <span v-if="friend.unreadCount >0" class="text-red ml-1">{{friend.unreadCount}}</span>
+                    </div>
                     
                     <svg 
-                    class="h-4 w-4 fill-current"
+                    class="h-4 w-4 fill-current justify-end"
                     v-show="friend.online"
                     :class="activeSessionId==friend.sessionId ? 'text-black': 'text-red'" 
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM6.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm7 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm2.16 3a6 6 0 0 1-11.32 0h11.32z"/></svg>
@@ -96,6 +100,12 @@
            showChat(val1, val2) {
                this.activeSessionId = val1;
                this.activeFriendId = val2;
+               this.friendForm.forEach(friend=>{
+                   if(friend.sessionId == val1) {
+                       friend.unreadCount = 0;
+                   }
+               })
+               this.read();
              
            },
 
@@ -120,12 +130,29 @@
 
             async getFriends() {
               this.friendForm =(await axios.get('/getfriends')).data.data;
-              
+              this.friendForm.forEach(friend => {
+                  Echo.private(`message.${friend.sessionId}`)
+                  .listen('MessageEvent', (e) => {
+                      if (friend.sessionId != this.activeSessionId) {
+                          friend.unreadCount++;
+                          //session đang active thì không count unread message
+                      } else {
+                          if(e.userId != this.id) {
+                              this.read();
+                              //khi đang trò chuyện lúc nhận tin nhắn
+                              //thì read_at trong chats cũng được update từ NULL sang Carbon::now
+                              //nhờ function read().
+                          }
+                      }
+                      })
+                
+                // có thể viết listen event trong từng object từ data của Vue.
+              });
                 
             },
 
             async getFriendsAndCheckOnline() {
-              this.friendForm =(await axios.get('/getfriends')).data.data;
+             await this.getFriends();
               this.checkOnline();// check online lập tức sau khi await data pull vào friendForm
                 
             },
@@ -146,6 +173,11 @@
 
 
            },
+
+          async read() {
+              await axios.post(`/session/${this.activeSessionId}/read`);
+            // để chuyển các unread mess thành read mess.
+          },
 
            
 
@@ -243,4 +275,28 @@
     //dùng kết hợp watch create và debounce để pull data mỗi giây sẽ nặng server không dùng cách này
     //dùng private-channel để make-listen event ngay thời điểm
     //có invite hoặc accept invite data sẽ được pull ngay mà không cần refresh page
+
+    //Thông thường sau khi thay đổi database sẽ phát Event (trong file controller)
+    //Để listen event đều phải qua created() để khi đăng nhập vào trang
+    //thì phần code listen đã được chạy sẵn, khi có event được phát
+    //thì trang sẽ lập tức bắt được
+    //sau khi bắt event có thể dùng để fetch data từ database
+    //hoặc dùng để thay đổi các data trong Vue (1 số data chỉ là tạm thời để show đến user
+    //sẽ bị mất sau khi refresh)
+    //khi phát event có thể kèm theo data, để khi listen event sử dụng data này
+    //làm thay đổi các data trong Vue
+    //nếu viết listen event trong create thì dùng để tương tác với toàn bộ data của Vue
+    //nếu viết listen event trong 1 object của data thì dùng để tương tác với props bên trong object này.
+    //1 event được phát ra có thể được listen ở nhiều vị trí khác nhau với mục đích khác nhau
+
+    // Kĩ thuật tương tác với database, Vue thông qua broadcast event:
+    // Khi có 1 thao tác từ front-end làm thay đổi database và phải trả kết quả lại front-end
+    // qua axios, controller ta send request đến server để làm thay đổi database
+    // sau đó phát ra event, từ Vue ta listen event và tương tác với data của Vue
+    // để trả kết quả về front-end (mà không cần fetch data từ database)
+    // cách này nhanh chóng show kết quả lên front-end
+    // hạn chế việc liên tục fetch dữ liệu từ database
+    // nhưng vẫn đảm bảo sau khi refresh trang (fetch từ database) vần cho kết quả giống nhau
+    // hay kết quả từ data của Vue show đến user vẫn đúng với database
+
 </script>

@@ -1918,6 +1918,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -1981,6 +1985,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     showChat: function showChat(val1, val2) {
       this.activeSessionId = val1;
       this.activeFriendId = val2;
+      this.friendForm.forEach(function (friend) {
+        if (friend.sessionId == val1) {
+          friend.unreadCount = 0;
+        }
+      });
+      this.read();
     },
     sendEmail: function () {
       var _sendEmail = _asyncToGenerator(
@@ -2065,6 +2075,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _getFriends = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var _this = this;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
@@ -2074,8 +2086,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 2:
                 this.friendForm = _context5.sent.data.data;
+                this.friendForm.forEach(function (friend) {
+                  Echo["private"]("message.".concat(friend.sessionId)).listen('MessageEvent', function (e) {
+                    if (friend.sessionId != _this.activeSessionId) {
+                      friend.unreadCount++; //session đang active thì không count unread message
+                    } else {
+                      if (e.userId != _this.id) {
+                        _this.read(); //khi đang trò chuyện lúc nhận tin nhắn
+                        //thì read_at trong chats cũng được update từ NULL sang Carbon::now
+                        //nhờ function read().
 
-              case 3:
+                      }
+                    }
+                  }); // có thể viết listen event trong từng object từ data của Vue.
+                });
+
+              case 4:
               case "end":
                 return _context5.stop();
             }
@@ -2098,13 +2124,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context6.prev = _context6.next) {
               case 0:
                 _context6.next = 2;
-                return axios.get('/getfriends');
+                return this.getFriends();
 
               case 2:
-                this.friendForm = _context6.sent.data.data;
                 this.checkOnline(); // check online lập tức sau khi await data pull vào friendForm
 
-              case 4:
+              case 3:
               case "end":
                 return _context6.stop();
             }
@@ -2119,10 +2144,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return getFriendsAndCheckOnline;
     }(),
     checkOnline: function checkOnline() {
-      var _this = this;
+      var _this2 = this;
 
       this.friendForm.forEach(function (friend) {
-        _this.users.forEach(function (user) {
+        _this2.users.forEach(function (user) {
           if (user.id == friend.id) {
             friend.online = true;
           }
@@ -2131,17 +2156,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // func này dùng để check user có đang online sau khi accept invite
       // do sau khi accept invite không refresh page mà chỉ listen AcceptEvent
       // nên presence-channel 'online' bên dưới không chạy phải dùng function này để check lập tức
-    }
+    },
+    read: function () {
+      var _read = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _context7.next = 2;
+                return axios.post("/session/".concat(this.activeSessionId, "/read"));
+
+              case 2:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this);
+      }));
+
+      function read() {
+        return _read.apply(this, arguments);
+      }
+
+      return read;
+    }()
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     this.getFriends();
     this.getInvites();
     Echo.join('online').here(function (users) {
-      _this2.users = users;
+      _this3.users = users;
 
-      _this2.friendForm.forEach(function (friend) {
+      _this3.friendForm.forEach(function (friend) {
         users.forEach(function (user) {
           if (user.id == friend.id) {
             friend.online = true;
@@ -2149,17 +2199,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       });
     }).joining(function (user) {
-      _this2.users.push(user);
+      _this3.users.push(user);
 
-      _this2.friendForm.forEach(function (friend) {
+      _this3.friendForm.forEach(function (friend) {
         if (user.id == friend.id) {
           friend.online = true;
         }
       });
     }).leaving(function (user) {
-      _this2.users.splice(_this2.users.indexOf(user), 1);
+      _this3.users.splice(_this3.users.indexOf(user), 1);
 
-      _this2.friendForm.forEach(function (friend) {
+      _this3.friendForm.forEach(function (friend) {
         if (user.id == friend.id) {
           friend.online = false;
         }
@@ -2170,13 +2220,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     //.leaving: user mới logout
 
     Echo["private"]('invite.' + this.id).listen('InviteEvent', function () {
-      _this2.getInvites(); //this.id không đổi cả quá trình nên có thể viết listen tại đây   
+      _this3.getInvites(); //this.id không đổi cả quá trình nên có thể viết listen tại đây   
 
     });
     Echo["private"]('accept.' + this.id).listen('AcceptEvent', function () {
-      _this2.getInvites();
+      _this3.getInvites();
 
-      _this2.getFriendsAndCheckOnline();
+      _this3.getFriendsAndCheckOnline();
     }); // Không viết Echo.private('message.session_id)...ở đây
     // vì mỗi lần auth chỉ có thể kèm theo 1 giá trị id nhất định và không thể thay đổi
     // nhưng session_id thì có nhiều giá trị theo friend list
@@ -2194,6 +2244,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //dùng kết hợp watch create và debounce để pull data mỗi giây sẽ nặng server không dùng cách này
 //dùng private-channel để make-listen event ngay thời điểm
 //có invite hoặc accept invite data sẽ được pull ngay mà không cần refresh page
+//Thông thường sau khi thay đổi database sẽ phát Event (trong file controller)
+//Để listen event đều phải qua created() để khi đăng nhập vào trang
+//thì phần code listen đã được chạy sẵn, khi có event được phát
+//thì trang sẽ lập tức bắt được
+//sau khi bắt event có thể dùng để fetch data từ database
+//hoặc dùng để thay đổi các data trong Vue (1 số data chỉ là tạm thời để show đến user
+//sẽ bị mất sau khi refresh)
+//khi phát event có thể kèm theo data, để khi listen event sử dụng data này
+//làm thay đổi các data trong Vue
+//nếu viết listen event trong create thì dùng để tương tác với toàn bộ data của Vue
+//nếu viết listen event trong 1 object của data thì dùng để tương tác với props bên trong object này.
+//1 event được phát ra có thể được listen ở nhiều vị trí khác nhau với mục đích khác nhau
+// Kĩ thuật tương tác với database, Vue thông qua broadcast event:
+// Khi có 1 thao tác từ front-end làm thay đổi database và phải trả kết quả lại front-end
+// qua axios, controller ta send request đến server để làm thay đổi database
+// sau đó phát ra event, từ Vue ta listen event và tương tác với data của Vue
+// để trả kết quả về front-end (mà không cần fetch data từ database)
+// cách này nhanh chóng show kết quả lên front-end
+// hạn chế việc liên tục fetch dữ liệu từ database
+// nhưng vẫn đảm bảo sau khi refresh trang (fetch từ database) vần cho kết quả giống nhau
+// hay kết quả từ data của Vue show đến user vẫn đúng với database
 
 /***/ }),
 
@@ -50548,7 +50619,7 @@ var render = function() {
             _c(
               "ul",
               {
-                staticClass: "list-reset overflow-y-scroll relative",
+                staticClass: "list-reset overflow-y-scroll relative ",
                 staticStyle: { height: "500px" }
               },
               [
@@ -50570,10 +50641,16 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v(
-                        _vm._s(friend.name) +
-                          "\n                \n                "
-                      ),
+                      _c("div", [
+                        _c("span", [_vm._v(_vm._s(friend.name))]),
+                        _vm._v(" "),
+                        friend.unreadCount > 0
+                          ? _c("span", { staticClass: "text-red ml-1" }, [
+                              _vm._v(_vm._s(friend.unreadCount))
+                            ])
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "svg",
                         {
@@ -50585,7 +50662,7 @@ var render = function() {
                               expression: "friend.online"
                             }
                           ],
-                          staticClass: "h-4 w-4 fill-current",
+                          staticClass: "h-4 w-4 fill-current justify-end",
                           class:
                             _vm.activeSessionId == friend.sessionId
                               ? "text-black"

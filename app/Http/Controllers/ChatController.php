@@ -6,6 +6,7 @@ use App\Chat;
 use App\Events\MessageEvent;
 use App\Http\Resources\ChatResource;
 use App\Session;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -37,5 +38,16 @@ class ChatController extends Controller
     {
         return ChatResource::collection($session->chats->where('user_id', auth()->id()));
         //trả về các chat đúng với session và user_id với data được biến đổi qua lớp Resource
+    }
+
+    public function read(Session $session)
+    {
+        $chats = $session->chats
+                            ->where('read_at', null)
+                            ->where('type',1)
+                            ->where('user_id', auth()->id());
+        foreach ($chats as $chat) {
+            $chat->update(['read_at'=>Carbon::now()]);//lưu ý Carbon
+        }
     }
 }

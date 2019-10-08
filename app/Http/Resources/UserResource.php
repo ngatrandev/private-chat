@@ -20,7 +20,8 @@ class UserResource extends JsonResource
             'name'=>$this->name,
             'email'=>$this->email, 
             'online'=>false, 
-            'sessionId'=>$this->sessionDetails($this->id)
+            'sessionId'=>$this->sessionDetails($this->id),
+            'unreadCount'=>$this->unreadCount($this->id)
         ];
     }
 
@@ -31,4 +32,17 @@ class UserResource extends JsonResource
     return $session->id;
     //Lưu ý cách lấy sessionId và dùng whereIn
     }
+
+    private function unreadCount($id) {
+        $session =  Session::whereIn('user1_id', [auth()->id(), $id])
+                    ->whereIn('user2_id', [auth()->id(), $id])
+                    ->first();
+        $chats = $session->chats
+                            ->where('read_at', null)
+                            ->where('type',1)
+                            ->where('user_id', auth()->id())
+                            ->count();
+        return $chats;
+        }
+        // đếm các mess chưa xem
 }
