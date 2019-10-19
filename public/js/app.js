@@ -1918,10 +1918,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -1938,7 +1934,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       activeSessionId: '',
       activeFriendId: '',
-      block: false,
       form: {
         email: ''
       },
@@ -1976,12 +1971,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return send;
     }(),
-    session_block: function session_block() {
-      this.block = true;
-    },
-    session_unblock: function session_unblock() {
-      this.block = false;
-    },
     showChat: function showChat(val1, val2) {
       this.activeSessionId = val1;
       this.activeFriendId = val2;
@@ -2341,6 +2330,10 @@ __webpack_require__.r(__webpack_exports__);
       this.blocked = false;
       this.isOpen = false;
       this.$emit('unblocked');
+    },
+    clear: function clear() {
+      this.isOpen = false;
+      this.$emit('clear');
     }
   }
 }); // lưu ý cách dùng event.target.closest('.dropdown')
@@ -2518,15 +2511,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       chats: [],
-      val: ''
+      val: '',
+      block: false
     };
   },
   methods: {
     blocked1: function blocked1() {
-      this.$emit('block_toggle');
+      this.block = true;
     },
     unblocked1: function unblocked1() {
-      this.$emit('unblock_toggle');
+      this.block = false;
     },
     getMessages: function () {
       var _getMessages = _asyncToGenerator(
@@ -2555,7 +2549,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return getMessages;
-    }()
+    }(),
+    clearChat: function clearChat() {
+      this.chats = [];
+      axios.post("/session/".concat(this.friend.sessionId, "/clear"));
+    }
   },
   created: function created() {
     var _this = this;
@@ -50752,10 +50750,6 @@ var render = function() {
                 friend: friend,
                 isOpen: _vm.activeSessionId == friend.sessionId,
                 id: _vm.id
-              },
-              on: {
-                block_toggle: _vm.session_block,
-                unblock_toggle: _vm.session_unblock
               }
             })
           })
@@ -50869,7 +50863,13 @@ var render = function() {
           "div",
           {
             staticClass:
-              "hover:bg-grey-light  border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left"
+              "hover:bg-grey-light cursor-pointer border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.clear($event)
+              }
+            }
           },
           [_vm._v("Clear chat")]
         ),
@@ -50879,7 +50879,7 @@ var render = function() {
               "div",
               {
                 staticClass:
-                  "hover:bg-grey-light  border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left",
+                  "hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left",
                 on: {
                   click: function($event) {
                     $event.preventDefault()
@@ -50896,7 +50896,7 @@ var render = function() {
               "div",
               {
                 staticClass:
-                  "hover:bg-grey-light  border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left",
+                  "hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left",
                 on: {
                   click: function($event) {
                     $event.preventDefault()
@@ -51189,7 +51189,11 @@ var render = function() {
           _vm._v(" "),
           _c("dropdown", {
             attrs: { align: "right", width: "200px" },
-            on: { blocked: _vm.blocked1, unblocked: _vm.unblocked1 }
+            on: {
+              clear: _vm.clearChat,
+              blocked: _vm.blocked1,
+              unblocked: _vm.unblocked1
+            }
           })
         ],
         1

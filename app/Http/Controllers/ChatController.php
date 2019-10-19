@@ -72,4 +72,12 @@ class ChatController extends Controller
         
         
     }
+
+    public function clear(Session $session) 
+    {
+        $session->chats()->where('user_id', auth()->id())->delete();
+        
+        $session->chats->count() == 0 ? $session->messages()->delete() : '';
+        //nếu chats cả hai bên đều bị xóa thì messages của session cũng bị xóa
+    }
 }

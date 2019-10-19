@@ -32,5 +32,6 @@ Route::get('/getfriends', 'HomeController@getFriends');
 Route::post('/send/{session}', 'ChatController@storeMessage');
 Route::post('/session/{session}/chats', 'ChatController@chats');
 Route::post('/session/{session}/read', 'ChatController@read');
+Route::post('/session/{session}/clear', 'ChatController@clear');
 
 

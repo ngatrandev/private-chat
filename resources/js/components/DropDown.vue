@@ -17,9 +17,9 @@
              :class="align === 'left' ? 'pin-l' : 'pin-r'"
              :style="{ width }"
         >
-             <div  class="hover:bg-grey-light  border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Clear chat</div>
-            <div v-if="!blocked" @click.prevent="block" class="hover:bg-grey-light  border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Block</div>
-            <div v-if="blocked"  @click.prevent="unblock" class="hover:bg-grey-light  border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Unblock</div>
+             <div @click.prevent="clear" class="hover:bg-grey-light cursor-pointer border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Clear chat</div>
+            <div v-if="!blocked" @click.prevent="block" class="hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Block</div>
+            <div v-if="blocked"  @click.prevent="unblock" class="hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Unblock</div>
         </div>
     </div>
 </template>
@@ -59,6 +59,11 @@
                 this.blocked = false;
                 this.isOpen = false;
                 this.$emit('unblocked')
+            },
+
+            clear() {
+                this.isOpen = false;
+                this.$emit('clear');
             }
         }
     }

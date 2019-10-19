@@ -41,10 +41,6 @@
             :friend="friend"
             :isOpen="activeSessionId==friend.sessionId"
             :id="id"
-            @block_toggle="session_block"
-            @unblock_toggle="session_unblock"
-           
-           
             ></message-component>
         </div>
         
@@ -72,7 +68,6 @@
             
                activeSessionId: '',
                activeFriendId: '',
-               block: false,
                form: {email: ''},
                inviteForm : '',
                friendForm : [],
@@ -89,13 +84,7 @@
                    to_user: this.activeFriendId
                })
            },
-           session_block() {
-               this.block = true;
-           },
-
-           session_unblock() {
-               this.block = false;
-           },
+           
 
            showChat(val1, val2) {
                this.activeSessionId = val1;

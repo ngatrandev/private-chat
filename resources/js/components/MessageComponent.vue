@@ -2,7 +2,7 @@
         <div v-show="isOpen"  class="w-3/4 border border-grey-light ">
             <div class="flex bg-grey-light font-serif justify-between w-full py-2">
                 <h4>{{friend.name}}</h4>
-                <dropdown @blocked="blocked1" @unblocked="unblocked1" align=right width="200px"></dropdown>
+                <dropdown @clear="clearChat" @blocked="blocked1" @unblocked="unblocked1" align=right width="200px"></dropdown>
             </div>
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
                 <li class="py-2 px-2  " v-for="chat in chats"
@@ -34,22 +34,28 @@ export default {
     data() {
         return {
             chats: [],
-            val: ''
+            val: '',
+            block: false
         }
     },
 
     methods: {
         blocked1() {
-            this.$emit('block_toggle');
+            this.block = true;
         },
 
         unblocked1() {
-            this.$emit('unblock_toggle');
+           this.block = false;
         },
 
         async getMessages() {
                this.chats = (await axios.post(`/session/${this.friend.sessionId}/chats`)).data.data;
            },
+
+        clearChat() {
+            this.chats = [];
+            axios.post(`/session/${this.friend.sessionId}/clear`);
+        }
 
            
     },
