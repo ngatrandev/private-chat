@@ -6,12 +6,20 @@
             </div>
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
                 <li class="py-2 px-2  " v-for="chat in chats"
-                :class="chat.type == 0? 'text-right': ''"
-                >
+                :class="{'text-right':chat.type == 0,
+                'text-red': chat.readAt == null}">
                 <span
                 v-text="chat.message"
                 class="px-2 py-1 rounded shadow-lg text-sm"
-                :class="chat.type == 0? 'bg-blue-lighter': 'bg-pink-lighter'"
+                :class="{
+                'bg-blue-lighter':chat.type == 0,
+                'bg-pink-lighter':chat.type == 1
+                }"
+                ></span>
+                <br>
+                 <span
+                v-text="chat.send_at"
+                class=" py-1 text-2xs text-grey"
                 ></span>
                 </li>
             </ul>
@@ -50,19 +58,37 @@ export default {
         Echo.private('message.'+this.friend.sessionId)
            .listen('MessageEvent', (e)=>{
                if(this.id == e.userId) {
-                   this.val = 0;
+                        this.chats.push({
+                        id: e.chatId,
+                        message: e.message,
+                        type: 0,
+                        readAt: null,
+                        send_at: 'just now'
+                    });
                } else {
-                   this.val = 1;
-                   //val dùng để xác định mess được push vào là send hay recieve
+                   this.chats.push({
+                        message: e.message,
+                        type: 1,
+                        readAt: '',
+                        send_at: 'just now'
+                    });
+                   //if else để xác định mess được push vào là send hay recieve
+                   //just now chỉ mang nghĩa tương đối vì được push qua Event-không pull trực tiếp từ database
                }
-              this.chats.push({
-                  message: e.message,
-                  type: this.val
-              })
+              
               //khi send hoặc recieve mess mới không pull lại data từ data base
               // mà qua listen event để thêm mess mới vào data của Vue
               // làm cho mess được show nhanh hơn
            });
+
+         Echo.private('message.'+this.friend.sessionId)
+           .listen('MsgReadEvent', (e)=>{
+               this.chats.forEach(chat=>{
+                   chat.id == e.chat.id? chat.readAt = e.chat.readAt : '';
+               })
+           });//mes được gửi có text-red nếu tin nhắn được xem sẽ đối sang text-default nhờ listen event này
+        //hai event khác nhau là MessageEvent, MsgReadEvent nhưng có thể cùng tên private channel message.sessionId
+        
 
           
 

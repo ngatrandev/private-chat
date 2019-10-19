@@ -18,9 +18,11 @@ class ChatResource extends JsonResource
             'message' => $this->message['content'],
             'id'=> $this->id,
             'type'=>$this->type,
+            'readAt'=>$this->read_at? $this->read_at->diffForHumans():null,
             'send_at'=>$this->created_at->diffForHumans()
             // chat vẫn trả về được message[content] vì đã có relation 
         ];
         
     }
+
 }

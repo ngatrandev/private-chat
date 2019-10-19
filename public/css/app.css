@@ -5722,6 +5722,10 @@ table {
   color: #ffebef;
 }
 
+.text-2xs {
+  font-size: .5rem;
+}
+
 .text-xs {
   font-size: .75rem;
 }
@@ -11293,6 +11297,10 @@ table {
 
   .sm\:focus\:text-pink-lightest:focus {
     color: #ffebef;
+  }
+
+  .sm\:text-2xs {
+    font-size: .5rem;
   }
 
   .sm\:text-xs {
@@ -16869,6 +16877,10 @@ table {
     color: #ffebef;
   }
 
+  .md\:text-2xs {
+    font-size: .5rem;
+  }
+
   .md\:text-xs {
     font-size: .75rem;
   }
@@ -22443,6 +22455,10 @@ table {
     color: #ffebef;
   }
 
+  .lg\:text-2xs {
+    font-size: .5rem;
+  }
+
   .lg\:text-xs {
     font-size: .75rem;
   }
@@ -28015,6 +28031,10 @@ table {
 
   .xl\:focus\:text-pink-lightest:focus {
     color: #ffebef;
+  }
+
+  .xl\:text-2xs {
+    font-size: .5rem;
   }
 
   .xl\:text-xs {

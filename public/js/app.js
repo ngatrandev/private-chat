@@ -2501,6 +2501,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['friend', 'isOpen', 'id'],
@@ -2554,19 +2562,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     Echo["private"]('message.' + this.friend.sessionId).listen('MessageEvent', function (e) {
       if (_this.id == e.userId) {
-        _this.val = 0;
+        _this.chats.push({
+          id: e.chatId,
+          message: e.message,
+          type: 0,
+          readAt: null,
+          send_at: 'just now'
+        });
       } else {
-        _this.val = 1; //val dùng để xác định mess được push vào là send hay recieve
-      }
+        _this.chats.push({
+          message: e.message,
+          type: 1,
+          readAt: '',
+          send_at: 'just now'
+        }); //if else để xác định mess được push vào là send hay recieve
+        //just now chỉ mang nghĩa tương đối vì được push qua Event-không pull trực tiếp từ database
 
-      _this.chats.push({
-        message: e.message,
-        type: _this.val
-      }); //khi send hoặc recieve mess mới không pull lại data từ data base
+      } //khi send hoặc recieve mess mới không pull lại data từ data base
       // mà qua listen event để thêm mess mới vào data của Vue
       // làm cho mess được show nhanh hơn
 
     });
+    Echo["private"]('message.' + this.friend.sessionId).listen('MsgReadEvent', function (e) {
+      _this.chats.forEach(function (chat) {
+        chat.id == e.chat.id ? chat.readAt = e.chat.readAt : '';
+      });
+    }); //mes được gửi có text-red nếu tin nhắn được xem sẽ đối sang text-default nhờ listen event này
+    //hai event khác nhau là MessageEvent, MsgReadEvent nhưng có thể cùng tên private channel message.sessionId
   },
   watch: {
     isOpen: function isOpen(_isOpen) {
@@ -51185,13 +51207,26 @@ var render = function() {
             "li",
             {
               staticClass: "py-2 px-2  ",
-              class: chat.type == 0 ? "text-right" : ""
+              class: {
+                "text-right": chat.type == 0,
+                "text-red": chat.readAt == null
+              }
             },
             [
               _c("span", {
                 staticClass: "px-2 py-1 rounded shadow-lg text-sm",
-                class: chat.type == 0 ? "bg-blue-lighter" : "bg-pink-lighter",
+                class: {
+                  "bg-blue-lighter": chat.type == 0,
+                  "bg-pink-lighter": chat.type == 1
+                },
                 domProps: { textContent: _vm._s(chat.message) }
+              }),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("span", {
+                staticClass: " py-1 text-2xs text-grey",
+                domProps: { textContent: _vm._s(chat.send_at) }
               })
             ]
           )

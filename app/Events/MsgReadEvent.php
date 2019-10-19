@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MessageEvent implements ShouldBroadcast
+class MsgReadEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,18 +19,15 @@ class MessageEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public $message;
+    public $chat;
     public $sessionId;
-    public $userId;
-    public $chatId;
-    public function __construct($message, $sessionId,$userId, $chatId)
+
+    public function __construct($chat, $sessionId)
     {
-        
-        $this->message = $message;
+        //
+        $this->chat = $chat;
         $this->sessionId = $sessionId;
-        $this->userId = $userId;
-        $this->chatId = $chatId;
-       
+        $this->dontBroadcastToCurrentUser();
     }
 
     /**

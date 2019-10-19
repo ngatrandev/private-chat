@@ -83,4 +83,6 @@ class User extends Authenticatable
     //trả về các user đã kết bạn, lưu ý cách dùng map() methods và if
     //để chuyển từ collection session qua collection user (friend list)
     }
+
+    
 }
