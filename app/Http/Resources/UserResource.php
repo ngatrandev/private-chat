@@ -21,7 +21,8 @@ class UserResource extends JsonResource
             'email'=>$this->email, 
             'online'=>false, 
             'sessionId'=>$this->sessionDetails($this->id),
-            'unreadCount'=>$this->unreadCount($this->id)
+            'unreadCount'=>$this->unreadCount($this->id),
+            'msgTyping'=>false
         ];
     }
 

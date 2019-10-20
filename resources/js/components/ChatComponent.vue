@@ -4,6 +4,7 @@
             <div class="w-1/4 border border-grey-light">
                 <div class="flex bg-grey-light font-serif justify-between py-2 border-r border-grey-lighter">
                     <h4>Your friends</h4>
+                    
                     <friend-dropdown
                     align=right width="200px"
                     @send1='sendEmail'
@@ -19,6 +20,40 @@
                     <div>
                          <span>{{friend.name}}</span>
                           <span v-if="friend.unreadCount >0" class="text-red ml-1">{{friend.unreadCount}}</span>
+                          <span v-show="friend.msgTyping">
+                            <svg  width="15" height="5" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                <circle cx="15" cy="15" r="15">
+                                    <animate attributeName="r" from="15" to="15"
+                                            begin="0s" dur="0.8s"
+                                            values="15;9;15" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    <animate attributeName="fill-opacity" from="1" to="1"
+                                            begin="0s" dur="0.8s"
+                                            values="1;.5;1" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                </circle>
+                                <circle cx="60" cy="15" r="9" fill-opacity="0.3">
+                                    <animate attributeName="r" from="9" to="9"
+                                            begin="0s" dur="0.8s"
+                                            values="9;15;9" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    <animate attributeName="fill-opacity" from="0.5" to="0.5"
+                                            begin="0s" dur="0.8s"
+                                            values=".5;1;.5" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                </circle>
+                                <circle cx="105" cy="15" r="15">
+                                    <animate attributeName="r" from="15" to="15"
+                                            begin="0s" dur="0.8s"
+                                            values="15;9;15" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    <animate attributeName="fill-opacity" from="1" to="1"
+                                            begin="0s" dur="0.8s"
+                                            values="1;.5;1" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                </circle>
+                            </svg>
+                          </span>
                     </div>
                     
                     <svg 
@@ -47,6 +82,7 @@
         <input-component
         v-show="activeSessionId > 0"
         @input="send"
+        @typing="type"
         ></input-component>
     </div>
 </template>
@@ -134,8 +170,16 @@
                           }
                       }
                       })
+                    .listenForWhisper('typing', e=> {
+                        friend.msgTyping = true;
+                        setTimeout(()=> {
+                            friend.msgTyping=false
+                        }, 3000);
+                        //để hiển thị animated dot khi có người đang soạn mess định gửi cho bạn
+                    });
                 
                 // có thể viết listen event trong từng object từ data của Vue.
+                // khi listen event các prop trong object này sẽ thay đổi
               });
                 
             },
@@ -167,6 +211,14 @@
               await axios.post(`/session/${this.activeSessionId}/read`);
             // để chuyển các unread mess thành read mess.
           },
+
+          type() {
+              Echo.private(`message.${this.activeSessionId}`).whisper('typing', {})
+              //có thể phát event typing trong method này (không nhất thiết từ controller)
+              //`message.${this.activeSessionId}` là private channel có thể dùng cho nhiều event
+              // như MessageEvent, MsgReadEvent, whisper('typing')...
+              //nhớ chọn enable client event trong Pusher
+          }
 
            
 

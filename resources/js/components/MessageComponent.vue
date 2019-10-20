@@ -1,5 +1,5 @@
 <template>
-        <div v-show="isOpen"  class="w-3/4 border border-grey-light ">
+        <div v-show="isOpen"  class="w-3/4 border border-grey-light relative">
             <div class="flex bg-grey-light font-serif justify-between w-full py-2">
                 <h4>{{friend.name}}</h4>
                 <dropdown @clear="clearChat" @blocked="blocked1" @unblocked="unblocked1" align=right width="200px"></dropdown>
@@ -23,6 +23,9 @@
                 ></span>
                 </li>
             </ul>
+            <div v-show="this.activePeer" class="text-blue text-xs absolute pin-b pin-l">
+                {{friend.name}} is typing...
+            </div>
         </div>
         
 </template>
@@ -35,7 +38,8 @@ export default {
         return {
             chats: [],
             val: '',
-            block: false
+            block: false,
+            activePeer: false
         }
     },
 
@@ -85,6 +89,14 @@ export default {
               //khi send hoặc recieve mess mới không pull lại data từ data base
               // mà qua listen event để thêm mess mới vào data của Vue
               // làm cho mess được show nhanh hơn
+           })
+           .listenForWhisper('typing', e=> {
+               this.activePeer = true;
+               setTimeout(()=> {
+                   this.activePeer=false
+               }, 3000);
+               //để hiển thị Someone is typing...
+               //nhờ listen event typing
            });
 
          Echo.private('message.'+this.friend.sessionId)
@@ -93,7 +105,7 @@ export default {
                    chat.id == e.chat.id? chat.readAt = e.chat.readAt : '';
                })
            });//mes được gửi có text-red nếu tin nhắn được xem sẽ đối sang text-default nhờ listen event này
-        //hai event khác nhau là MessageEvent, MsgReadEvent nhưng có thể cùng tên private channel message.sessionId
+        //các event khác nhau MessageEvent, MsgReadEvent có thể cùng private channel message.sessionId
         
 
           
