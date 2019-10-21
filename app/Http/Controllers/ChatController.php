@@ -31,7 +31,7 @@ class ChatController extends Controller
         //mỗi mess tạo 2 bản chat cho người gửi và người nhận
         //để khi 1 người xóa mess không ảnh hưởng người còn lại
 
-        event(new MessageEvent($message->content, $message->session_id, auth()->id(), $chat->id));
+        event(new MessageEvent($message->content, $message->session_id, auth()->id(), $chat->id, $chat->created_at->format('d/m/y h:i')));
         return $message;
     }
 

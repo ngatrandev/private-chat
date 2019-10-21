@@ -19,8 +19,9 @@ class ChatResource extends JsonResource
             'id'=> $this->id,
             'type'=>$this->type,
             'readAt'=>$this->read_at? $this->read_at->diffForHumans():null,
-            'send_at'=>$this->created_at->diffForHumans()
+            'send_at'=>$this->created_at->format('d/m/y h:i')
             // chat vẫn trả về được message[content] vì đã có relation 
+            // cách format về thời gian trong created_at
         ];
         
     }

@@ -2127,8 +2127,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     friend.msgTyping = true;
                     setTimeout(function () {
                       friend.msgTyping = false;
-                    }, 3000);
+                    }, 3000); //để hiển thị animated dot khi có người đang soạn mess định gửi cho bạn
                   }); // có thể viết listen event trong từng object từ data của Vue.
+                  // khi listen event các prop trong object này sẽ thay đổi
                 });
 
               case 4:
@@ -2213,7 +2214,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return read;
     }(),
     type: function type() {
-      Echo["private"]("message.".concat(this.activeSessionId)).whisper('typing', {});
+      Echo["private"]("message.".concat(this.activeSessionId)).whisper('typing', {}); //có thể phát event typing trong method này (không nhất thiết từ controller)
+      //`message.${this.activeSessionId}` là private channel có thể dùng cho nhiều event
+      // như MessageEvent, MsgReadEvent, whisper('typing')...
+      //nhớ chọn enable client event trong Pusher
     }
   },
   created: function created() {
@@ -2616,16 +2620,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           message: e.message,
           type: 0,
           readAt: null,
-          send_at: 'just now'
+          send_at: e.chatTime
         });
       } else {
         _this.chats.push({
           message: e.message,
           type: 1,
           readAt: '',
-          send_at: 'just now'
+          send_at: e.chatTime
         }); //if else để xác định mess được push vào là send hay recieve
-        //just now chỉ mang nghĩa tương đối vì được push qua Event-không pull trực tiếp từ database
+        //e.chatTime đảm bảo thời gian dù không pull trực tiếp từ database
+        //nhưng vẫn chính xác vì giá trị này listen qua event
 
       } //khi send hoặc recieve mess mới không pull lại data từ data base
       // mà qua listen event để thêm mess mới vào data của Vue
@@ -2635,14 +2640,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _this.activePeer = true;
       setTimeout(function () {
         _this.activePeer = false;
-      }, 3000);
+      }, 3000); //để hiển thị Someone is typing...
+      //nhờ listen event typing
     });
     Echo["private"]('message.' + this.friend.sessionId).listen('MsgReadEvent', function (e) {
       _this.chats.forEach(function (chat) {
         chat.id == e.chat.id ? chat.readAt = e.chat.readAt : '';
       });
     }); //mes được gửi có text-red nếu tin nhắn được xem sẽ đối sang text-default nhờ listen event này
-    //hai event khác nhau là MessageEvent, MsgReadEvent nhưng có thể cùng tên private channel message.sessionId
+    //các event khác nhau MessageEvent, MsgReadEvent có thể cùng private channel message.sessionId
   },
   watch: {
     isOpen: function isOpen(_isOpen) {
@@ -51438,7 +51444,7 @@ var render = function() {
               expression: "this.activePeer"
             }
           ],
-          staticClass: "text-blue text-xs absolute pin-b pin-l"
+          staticClass: "text-blue text-xs font-bold absolute pin-b pin-l"
         },
         [_vm._v("\n        " + _vm._s(_vm.friend.name) + " is typing...\n    ")]
       )

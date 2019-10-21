@@ -23,13 +23,16 @@ class MessageEvent implements ShouldBroadcast
     public $sessionId;
     public $userId;
     public $chatId;
-    public function __construct($message, $sessionId,$userId, $chatId)
+    public $chatTime;
+    public function __construct($message, $sessionId,$userId, $chatId, $chatTime)
     {
         
         $this->message = $message;
         $this->sessionId = $sessionId;
         $this->userId = $userId;
         $this->chatId = $chatId;
+        $this->chatTime = $chatTime;
+
        
     }
 

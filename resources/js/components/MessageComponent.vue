@@ -23,7 +23,7 @@
                 ></span>
                 </li>
             </ul>
-            <div v-show="this.activePeer" class="text-blue text-xs absolute pin-b pin-l">
+            <div v-show="this.activePeer" class="text-blue text-xs font-bold absolute pin-b pin-l">
                 {{friend.name}} is typing...
             </div>
         </div>
@@ -73,17 +73,18 @@ export default {
                         message: e.message,
                         type: 0,
                         readAt: null,
-                        send_at: 'just now'
+                        send_at:e.chatTime 
                     });
                } else {
                    this.chats.push({
                         message: e.message,
                         type: 1,
                         readAt: '',
-                        send_at: 'just now'
+                        send_at:e.chatTime 
                     });
                    //if else để xác định mess được push vào là send hay recieve
-                   //just now chỉ mang nghĩa tương đối vì được push qua Event-không pull trực tiếp từ database
+                   //e.chatTime đảm bảo thời gian dù không pull trực tiếp từ database
+                   //nhưng vẫn chính xác vì giá trị này listen qua event
                }
               
               //khi send hoặc recieve mess mới không pull lại data từ data base
