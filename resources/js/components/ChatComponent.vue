@@ -81,6 +81,7 @@
         
         <input-component
         v-show="activeSessionId > 0"
+        :sessionId="activeSessionId"
         @input="send"
         @typing="type"
         ></input-component>

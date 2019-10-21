@@ -9,13 +9,15 @@
                 :class="{'text-right':chat.type == 0,
                 'text-red': chat.readAt == null}">
                 <span
-                v-text="chat.message"
+                v-show="chat.content"
+                v-text="chat.content"
                 class="px-2 py-1 rounded shadow-lg text-sm"
                 :class="{
                 'bg-blue-lighter':chat.type == 0,
                 'bg-pink-lighter':chat.type == 1
                 }"
                 ></span>
+                <img class="h-24 rounded shadow-lg" v-show="chat.image" :src="chat.image"  alt="">
                 <br>
                  <span
                 v-text="chat.send_at"
@@ -70,14 +72,16 @@ export default {
                if(this.id == e.userId) {
                         this.chats.push({
                         id: e.chatId,
-                        message: e.message,
+                        content: e.message.content,
+                        image: e.message.image,
                         type: 0,
                         readAt: null,
                         send_at:e.chatTime 
                     });
                } else {
                    this.chats.push({
-                        message: e.message,
+                        content: e.message.content,
+                        image: e.message.image,
                         type: 1,
                         readAt: '',
                         send_at:e.chatTime 

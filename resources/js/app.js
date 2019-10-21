@@ -22,6 +22,9 @@ Vue.use(require('vue-chat-scroll'));
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+const VueUploadComponent = require('vue-upload-component')
+Vue.component('file-upload', VueUploadComponent)//Vue-upload-component
+
 Vue.component('chat-component', require('./components/ChatComponent.vue').default);
 Vue.component('message-component', require('./components/MessageComponent.vue').default);
 Vue.component('input-component', require('./components/InputComponent.vue').default);

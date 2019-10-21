@@ -32,6 +32,7 @@ class MessageEvent implements ShouldBroadcast
         $this->userId = $userId;
         $this->chatId = $chatId;
         $this->chatTime = $chatTime;
+        
 
        
     }

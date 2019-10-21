@@ -14,8 +14,25 @@ class ChatController extends Controller
 {
     public function storeMessage(Session $session, Request $request)
     {
-        $message = $session->messages()->create(['content'=>$request->content]);
+        if($session->user1_id == auth()->id()) {
+            $to_user = $session->user2_id;
+        } else {
+            $to_user = $session->user1_id;
+        }
+
+
+        if(request()->has('file')) {
+            $filename = request('file')->store('image');
+            $request->file('file')->move('image', $filename);
+            //do không load được image từ Vue
+            //nên phải thêm dòng $request->file('file')->move('image', $filename);
+            //file ảnh được lưu ở 2 vị trí (tìm hiểu thêm để fix code)
+
+            $message = $session->messages()->create(['image'=>$filename]);
+        } else {
+            $message = $session->messages()->create(['content'=>$request->content]);
         //qua relation message sẽ tự lấy session_id
+        }
 
         $chat=$message->chats()->create([
             'session_id'=>$session->id,
@@ -26,12 +43,12 @@ class ChatController extends Controller
         $message->chats()->create([
             'session_id'=>$session->id,
             'type'=>1,
-            'user_id'=>$request->to_user
+            'user_id'=>$to_user
         ]);
         //mỗi mess tạo 2 bản chat cho người gửi và người nhận
         //để khi 1 người xóa mess không ảnh hưởng người còn lại
 
-        event(new MessageEvent($message->content, $message->session_id, auth()->id(), $chat->id, $chat->created_at->format('d/m/y h:i')));
+        event(new MessageEvent($message, $message->session_id, auth()->id(), $chat->id, $chat->created_at->format('d/m/y h:i')));
         return $message;
     }
 
