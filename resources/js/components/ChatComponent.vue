@@ -94,6 +94,7 @@
     import FriendDropDown from './FriendDropDown';
     import _ from 'lodash';
     import { async } from 'q';
+    
 
     
 
@@ -113,6 +114,7 @@
 
            }
        },
+       
        methods: {
            async send(value) {
              
