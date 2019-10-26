@@ -2522,6 +2522,13 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Picker: emoji_mart_vue__WEBPACK_IMPORTED_MODULE_0__["Picker"]
   },
+  watch: {
+    emoStatus: function emoStatus(_emoStatus) {
+      if (_emoStatus) {
+        document.addEventListener('click', this.closeIfClickedOutside);
+      }
+    }
+  },
   methods: {
     send: function send() {
       this.$emit('input', this.text);
@@ -2549,6 +2556,18 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.text = this.text + e["native"]; //e.native để add emoji icon vào theo syntax bên thứ 3
+    },
+    closeIfClickedOutside: function closeIfClickedOutside(event) {
+      if (!event.target.closest('.emotion')) {
+        this.emoStatus = false;
+        document.removeEventListener('click', this.closeIfClickedOutside);
+      } //method này cùng với phần watch bên trên để xác định những vị trí nào
+      //khi click vào emoStatus sẽ chuyển sang false (đóng cửa sổ emotion)
+      //class emotion không có nghĩa css
+      //những thẻ nào có class emotion khi click vào cửa sổ emotion sẽ không đóng
+      //các vị trí còn lại khi click vào cửa sổ emotion sẽ đóng
+      //lưu ý cách viết event.target.closest('.emotion')
+
     }
   }
 }); //dùng submit.prevent để không refresh lại page
@@ -57183,7 +57202,7 @@ var render = function() {
           _c(
             "svg",
             {
-              staticClass: "h-4 mt-2 fill-current ",
+              staticClass: " px-1 h-4 mt-2 fill-current ",
               attrs: {
                 xmlns: "http://www.w3.org/2000/svg",
                 viewBox: "0 0 20 20"
@@ -57204,7 +57223,7 @@ var render = function() {
       _c(
         "div",
         {
-          staticClass: "cursor-pointer text-green hover:text-red",
+          staticClass: "emotion cursor-pointer text-green hover:text-red",
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -57216,7 +57235,7 @@ var render = function() {
           _c(
             "svg",
             {
-              staticClass: " ml-2 mt-2  h-4 fill-current ",
+              staticClass: " px-1 mt-2  h-4 fill-current ",
               attrs: {
                 xmlns: "http://www.w3.org/2000/svg",
                 viewBox: "0 0 20 20"
@@ -57257,7 +57276,7 @@ var render = function() {
               }
             ],
             staticClass:
-              "text-base shadow appearance-none border rounded w-full py-1 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline",
+              " emotion text-base shadow appearance-none border rounded w-full py-1 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline",
             attrs: {
               id: "username",
               type: "text",
@@ -57278,9 +57297,9 @@ var render = function() {
       _vm._v(" "),
       _vm.emoStatus
         ? _c("picker", {
+            staticClass: "emotion",
             style: { position: "absolute", bottom: "15px", left: "15px" },
             attrs: {
-              data: _vm.emojiIndex,
               set: "emojione",
               emoji: "point_up",
               title: "Pick your emoji...",
