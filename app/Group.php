@@ -22,7 +22,7 @@ class Group extends Model
 
     public function members()
     {
-        return $this->belongsToMany('App\User')
+        return $this->belongsToMany('App\User');
         //mỗi user có nhiều group và mỗi group có nhiều user nên dùng belongsToMany-
     }
 

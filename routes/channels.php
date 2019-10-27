@@ -11,6 +11,7 @@
 |
 */
 
+use App\Group;
 use App\Session;
 
 Broadcast::channel('online', function ($user) {
@@ -39,4 +40,17 @@ Broadcast::channel('message.{session}', function ($user, Session $session){
     //do có add class Session nên {session} chính là id của $session
     // khác với cách viết {userId} ở channel trên
 });
+
+Broadcast::channel('group.{group}', function ($user, Group $group){
+   $members = $group->members;
+    foreach ($members as $member) {
+        if ($member->id == $user->id) {
+            return true;
+        }
+     }
+    return false;
+
+
+});
+
 

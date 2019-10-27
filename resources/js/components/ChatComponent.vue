@@ -4,17 +4,25 @@
             <div class="w-1/4 border border-grey-light">
                 <div class="flex bg-grey-light font-serif justify-between py-2 border-r border-grey-lighter">
                     <h4>Your friends</h4>
-                    
+                    <div class="flex">
+                        <group-dropdown 
+                        class="px-1"
+                    align=right width="200px"
+                    :friends="friendForm"
+                    ></group-dropdown>
+
                     <friend-dropdown
+                    class="px-1"
                     align=right width="200px"
                     @send1='sendEmail'
                     ></friend-dropdown>
+                    </div>
+                    
                 </div>
                 
                 <ul   class="list-reset overflow-y-scroll relative " style="height:500px">
                     <li v-for="friend in friendForm" 
                     @click.prevent="showChat(friend.sessionId, friend.id)"
-       
                     :class="activeSessionId==friend.sessionId ? 'bg-pink text-black': 'text-blue'"
                     class="flex hover:bg-teal hover:text-black justify-between border-b border-grey-lighter font-serif px-2 py-2">
                     <div>
@@ -68,15 +76,28 @@
                             Accept
                             </button>
                     </li>
+                     <li v-for="group in groups" 
+                     @click="showGroup(group.id)"
+                     :class="activeGroupId==group.id ? 'bg-pink text-black': 'text-blue'"
+                    class="flex hover:bg-teal hover:text-black  border-b border-grey-lighter font-serif px-2 py-2"
+                    ><svg class="mr-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 1c2.15 0 4.2.4 6.1 1.09L12 16h-1.25L10 20H4l-.75-4H2L.9 10.09A17.93 17.93 0 0 1 7 9zm8.31.17c1.32.18 2.59.48 3.8.92L18 16h-1.25L16 20h-3.96l.37-2h1.25l1.65-8.83zM13 0a4 4 0 1 1-1.33 7.76 5.96 5.96 0 0 0 0-7.52C12.1.1 12.53 0 13 0z"/></svg>
+                    {{group.name}} ({{group.memberCount}})</li>
                 </ul>
             </div>
             <message-component
             v-for="friend in friendForm"
-            :key="friend.sessionId"
+            :key="friend.id+1000"
             :friend="friend"
             :isOpen="activeSessionId==friend.sessionId"
             :id="id"
             ></message-component>
+            <group-component
+            v-for="group in groups"
+            :key="group.id"
+            :group="group"
+            :isOpen="activeGroupId==group.id"
+            :id="id"
+            ></group-component>
         </div>
         
         <input-component
@@ -85,6 +106,11 @@
         @input="send"
         @typing="type"
         ></input-component>
+        <group-input-component
+        v-show="activeGroupId > 0"
+        :groupId ="activeGroupId"
+        @input="groupsend"
+        ></group-input-component>
     </div>
 </template>
 
@@ -106,10 +132,12 @@
             
                activeSessionId: '',
                activeFriendId: '',
+               activeGroupId: '',
                form: {email: ''},
                inviteForm : '',
                friendForm : [],
                users: [],
+               groups: [],
               
 
            }
@@ -123,9 +151,16 @@
                    to_user: this.activeFriendId
                })
            },
+           async groupsend(value) {
+             
+               await axios.post(`/groupsend/${this.activeGroupId}`, {
+                   content: value,
+               })
+           },
            
 
            showChat(val1, val2) {
+               this.activeGroupId='';
                this.activeSessionId = val1;
                this.activeFriendId = val2;
                this.friendForm.forEach(friend=>{
@@ -135,6 +170,10 @@
                })
                this.read();
              
+           },
+           showGroup(id) {
+               this.activeSessionId='';
+               this.activeGroupId = id;
            },
 
            async sendEmail(e) {
@@ -153,6 +192,10 @@
 
             async getInvites() {
               this.inviteForm =(await axios.get('/getinvites')).data.data;
+                
+            },
+            async getGroups() {
+              this.groups =(await axios.get('/getgroups')).data.data;
                 
             },
 
@@ -240,6 +283,7 @@
        created() {
           this.getFriends();
           this.getInvites();
+          this.getGroups();
           
           
          
@@ -342,5 +386,12 @@
     // hạn chế việc liên tục fetch dữ liệu từ database
     // nhưng vẫn đảm bảo sau khi refresh trang (fetch từ database) vần cho kết quả giống nhau
     // hay kết quả từ data của Vue show đến user vẫn đúng với database
+
+    //viết  :key="friend.id+1000" ở <message-component> để tránh trùng với :key ở <group-component>
+    // nếu không viết :key hoặc key trùng đều xuất hiện warning - nghiên cứu thêm
+    //<message-component> và group-component> tương đồng nhau nhưng khác nhau ở 1-1 chat và group chat
+    //phải viết 2 component input <input-component> và <group-input-component> vì
+    //khi attachment <file-upload> đến 2 route khác nhau - tìm hiểu thêm
+
 
 </script>

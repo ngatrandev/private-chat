@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ChatCreate;
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -51,4 +52,13 @@ class HomeController extends Controller
      bản chất Resource không làm thay đổi data gốc
      Muốn dùng Resource phải qua API như trên
      */
+
+    public function getGroups()
+    {
+        $user=Auth()->user();
+      
+        $groups = $user->groups();
+        return  GroupResource::collection($groups);
+
+    }
 }

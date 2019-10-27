@@ -2,8 +2,7 @@
     <div class="w-full flex bg-grey-light font-serif py-2">
         <div class="w-1/4"></div>
         <file-upload
-           
-            :post-action="'send/'+sessionId"
+            :post-action="'groupsend/'+groupId"
             v-model="image"
             @input-filter="inputFilter"
             :headers="{'X-CSRF-TOKEN': token}"
@@ -42,7 +41,7 @@ export default {
             
         }
     },
-    props: ['sessionId'],
+    props: ['groupId'],
     components: {Picker},
     watch: {
             emoStatus(emoStatus) {
@@ -96,7 +95,8 @@ export default {
                 //lưu ý cách viết event.target.closest('.emotion')
             },
 
-        
+      
+      
 
        
         
@@ -106,8 +106,10 @@ export default {
     }
 }
 //dùng submit.prevent để không refresh lại page
-// :post-action="'send/'+sessionId" do có bind sessionId bên dưới nên phải
+// :post-action=... do có bind sessionId bên dưới nên phải
 // viết :post-action, tương tự :headers cũng vậy
 //do VueUploadComponent là bên thứ 3, nên các props, methods... đặc trưng riêng của nó
+// dùng 2 <file-upload></file-upload> ở 2 component khác nhau với 2 :post-action khác nhau
+// chỉ lấy được 1 route - fix lỗi này
 
 </script>

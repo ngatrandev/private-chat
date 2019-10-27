@@ -28,10 +28,13 @@ Route::patch('/sessions/{session}/update', 'SessionController@update');
 
 Route::get('/getinvites', 'HomeController@getInvites');
 Route::get('/getfriends', 'HomeController@getFriends');
+Route::get('/getgroups', 'HomeController@getGroups');
 
 Route::post('/send/{session}', 'ChatController@storeMessage');
 Route::post('/session/{session}/chats', 'ChatController@chats');
 Route::post('/session/{session}/read', 'ChatController@read');
 Route::post('/session/{session}/clear', 'ChatController@clear');
-
+Route::post('/creategroup', 'GroupController@create');
+Route::post('/groupsend/{group}', 'GroupChatController@storeMessage');
+Route::post('/group/{group}/chats', 'GroupChatController@chats');
 
