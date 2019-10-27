@@ -85,4 +85,15 @@ class User extends Authenticatable
     }
 
     
+    public function groups()
+    {
+        return Group::WhereHas('members', function ($query) {
+            $query->where('user_id', $this->id);
+        })
+        ->get();
+       
+        //trả về tất cả group cuả user 
+    }
+
+    
 }
