@@ -33,7 +33,7 @@ class GroupChatController extends Controller
             'user_id'=>auth()->id()
         ]);
         $user = Auth::user();
-        event(new GroupMsgEvent($message, $group->id, auth()->id(), $chat->id, $chat->created_at->format('d/m/y h:i'), $user->name)) ;
+        event(new GroupMsgEvent($message, $group->id, auth()->id(), $chat->id, $chat->created_at->format('d/m/y h:i'), $user->email)) ;
         $members = $group->members;
         foreach ($members as $member) {
             if ($member->id !== auth()->id()) {

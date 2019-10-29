@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Group;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GroupResource extends JsonResource
+class GroupUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,12 +17,10 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'name'=>$this->name,
-            'members'=>GroupUserResource::collection($this->members),
-            // do trả về các user cụ thể nên không viết $this->members()
-            // có thể dùng Resource khác trong file Resource
-            'memberCount'=>$this->members->count(),
+            'email'=>$this->email, 
+            'online'=>false
         ];
-    }
 
-    
+        //khác với UserResource, GroupUserResource để biến đổi các members trong group
+    }
 }

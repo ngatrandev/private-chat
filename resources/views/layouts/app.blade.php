@@ -19,6 +19,10 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script>
+        window.App = <?= json_encode(['user'=>auth()->user()]); ?>;
+        //để Vue có thể get curent user
+    </script>
 </head>
 <body class="section">
     <div id="app">

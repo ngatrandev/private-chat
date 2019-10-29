@@ -12,7 +12,10 @@ window.Vue = require('vue');
 Vue.use(require('vue-chat-scroll'));
 
 
-
+import Vue from 'vue';
+import Gravatar from 'vue-gravatar';
+ // để dùng gravatar trong vue
+Vue.component('v-gravatar', Gravatar);
 
 /**
  * The following block of code may be used to automatically register your

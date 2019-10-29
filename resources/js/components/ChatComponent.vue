@@ -63,12 +63,10 @@
                             </svg>
                           </span>
                     </div>
-                    
                     <svg 
-                    class="h-4 w-4 fill-current justify-end"
+                    class="h-3 w-3 fill-current text-green feather feather-circle mt-1"
                     v-show="friend.online"
-                    :class="activeSessionId==friend.sessionId ? 'text-black': 'text-red'" 
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM6.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm7 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm2.16 3a6 6 0 0 1-11.32 0h11.32z"/></svg>
+                    xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
                     </li>
                     <li v-for="invite in inviteForm" 
                     class="flex justify-between border-b border-grey-lighter font-serif px-2 py-2">{{invite.user1_name}}'s invitations
@@ -110,6 +108,7 @@
         v-show="activeGroupId > 0"
         :groupId ="activeGroupId"
         @input="groupsend"
+        @typing="grouptype"
         ></group-input-component>
     </div>
 </template>
@@ -264,7 +263,15 @@
               //`message.${this.activeSessionId}` là private channel có thể dùng cho nhiều event
               // như MessageEvent, MsgReadEvent, whisper('typing')...
               //nhớ chọn enable client event trong Pusher
-          }
+          },
+
+          grouptype() {
+              Echo.private(`group.${this.activeGroupId}`).whisper('grouptyping', {
+                  name: window.App.user.name//logic với file app.blade.php
+              })
+          },
+
+
 
            
 

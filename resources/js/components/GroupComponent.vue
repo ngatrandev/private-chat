@@ -1,19 +1,26 @@
 <template>
         <div v-show="isOpen"  class="w-3/4 border border-grey-light relative">
-            <div class="flex bg-grey-light font-serif justify-between w-full py-2">
-                <h4>{{group.name}} <span v-for="user in group.members">{{user.name}}</span></h4>
+            <div class="flex items-center bg-grey-light font-serif justify-between w-full py-1">
+                <h4  class=" flex items-center">{{group.name}} 
+                    <span 
+                    class="relative"
+                    v-for="user in group.members"
+                    ><v-gravatar class="px-1 py-1 ml-1 rounded-full" :email="user.email" alt="Nobody" :size="20" default-img="mm" />
+                    <svg 
+                    class="h-2 w-2 fill-current text-green feather feather-circle pin-b pin-r absolute z-10"
+                    v-show="user.online"
+                    xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    </span></h4>
                 <dropdown @clear="clearChat"  align=right width="200px"></dropdown>
             </div>
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
                 <li class="py-2 px-2  " v-for="chat in chats"
                 :class="{'text-right':chat.type == 0,
                 'text-red': chat.readAt == null}">
-                <span
-                v-show="chat.type == 1"
-                v-text="chat.from"
-                class="text-xs text-black py-1"
-                ></span>
-                <br>
+                
+                <span  v-show="chat.type == 1">
+                    <v-gravatar class="-mb-2 rounded-full" :email="chat.from" alt="Nobody" :size="30" default-img="mm" />
+                </span>
                 <span
                 v-show="chat.content"
                 v-text="chat.content"
@@ -31,8 +38,8 @@
                 ></span>
                 </li>
             </ul>
-            <div v-show="this.activePeer" class="text-blue text-xs font-bold absolute pin-b pin-l">
-                 is typing...
+            <div v-show="this.activePeer" class="bg-grey-light rounded text-blue text-xs font-bold absolute z-10 pin-b pin-l">
+               {{typingUser}}  is typing...
             </div>
         </div>
         
@@ -46,8 +53,8 @@ export default {
         return {
             chats: [],
             val: '',
-            
-            activePeer: false
+            activePeer: false,
+            typingUser: ''
         }
     },
 
@@ -90,6 +97,43 @@ export default {
                }
               
            })
+           .listenForWhisper('grouptyping', e=> {
+               this.activePeer = true;
+               this.typingUser = e.name
+               setTimeout(()=> {
+                   this.activePeer=false
+                   this.typingUser=''
+               }, 3000);
+               //để hiển thị Someone is typing...
+               //nhờ listen event 
+           });
+
+
+         Echo.join('online')
+                    .here((users)=> {
+                        this.group.members.forEach(member=> {
+                            users.forEach(user=> {
+                                if(user.id == member.id) {
+                                    member.online = true;
+                                }
+                            })
+                        })
+                    })
+                    .joining((user)=> {
+                        this.group.members.forEach(member =>{
+                                if(user.id == member.id) {
+                                    member.online = true;
+                                }
+                            })
+                    })
+                    .leaving((user)=> {
+                        this.group.members.forEach(member => {
+                                if(user.id == member.id) {
+                                    member.online = false;
+                                }
+                            })
+                            
+                    });
 
           
 

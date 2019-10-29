@@ -32,7 +32,7 @@ class GroupChatResource extends JsonResource
     private function getUser($id) {
         $message = GroupMessage::where('id', $id)->first();
         $chat = $message->groupChats->where('type', 0)->first();
-        $user = User::where('id',$chat->user_id)->first();
-        return $user->name;
+        $user = User::where('id',$chat->user_id)->first();//xác định msg được nhận từ user nào trong group
+        return $user->email;
     }
 }
