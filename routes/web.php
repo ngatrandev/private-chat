@@ -37,4 +37,5 @@ Route::post('/session/{session}/clear', 'ChatController@clear');
 Route::post('/creategroup', 'GroupController@create');
 Route::post('/groupsend/{group}', 'GroupChatController@storeMessage');
 Route::post('/group/{group}/chats', 'GroupChatController@chats');
+Route::post('/group/{group}/read', 'GroupChatController@read');
 

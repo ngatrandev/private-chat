@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\GroupMsgEvent;
 use App\Group;
 use App\Http\Resources\GroupChatResource;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,5 +52,27 @@ class GroupChatController extends Controller
     public function chats(Group $group)
     {
         return GroupChatResource::collection($group->groupChats->where('user_id', auth()->id()));
+    }
+
+    public function read(Group $group)
+    {
+        $chats1 = $group->groupChats->where('read_at',null)
+                                    ->where('type', 1)
+                                    ->where('user_id', auth()->id());
+        //$chat1 là bộ mes được nhận của user hiện tại, khi update sẽ chuyển unreadMess count về 0
+
+       
+                            
+        foreach ($chats1 as $chat) {
+            $chat->update(['read_at' => Carbon::now()]); 
+        };
+
+
+        
+
+
+     
+        
+        
     }
 }

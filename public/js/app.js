@@ -1980,6 +1980,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2076,6 +2112,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     showGroup: function showGroup(id) {
       this.activeSessionId = '';
       this.activeGroupId = id;
+      this.groups.forEach(function (group) {
+        if (group.id == id) {
+          group.unreadCount = 0;
+        }
+      });
+      this.groupread();
     },
     sendEmail: function () {
       var _sendEmail = _asyncToGenerator(
@@ -2160,6 +2202,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _getGroups = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        var _this = this;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
@@ -2169,8 +2213,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 2:
                 this.groups = _context6.sent.data.data;
+                this.groups.forEach(function (group) {
+                  Echo["private"]("group.".concat(group.id)).listen('GroupMsgEvent', function (e) {
+                    if (group.id != _this.activeGroupId) {
+                      group.unreadCount++; //group đang active thì không count unread message
+                    } else {
+                      if (e.userId != _this.id) {
+                        _this.groupread(); //khi đang trò chuyện lúc nhận tin nhắn
+                        //thì read_at trong chats cũng được update từ NULL sang Carbon::now
+                        //nhờ function read().
 
-              case 3:
+                      }
+                    }
+                  }).listenForWhisper('grouptyping', function (e) {
+                    group.msgTyping = true;
+                    setTimeout(function () {
+                      group.msgTyping = false;
+                    }, 3000); //để hiển thị animated dot khi có người đang soạn mess định gửi cho bạn
+                  }); // có thể viết listen event trong từng object từ data của Vue.
+                  // khi listen event các prop trong object này sẽ thay đổi
+                });
+
+              case 4:
               case "end":
                 return _context6.stop();
             }
@@ -2188,7 +2252,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _getFriends = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
-        var _this = this;
+        var _this2 = this;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
           while (1) {
@@ -2201,11 +2265,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.friendForm = _context7.sent.data.data;
                 this.friendForm.forEach(function (friend) {
                   Echo["private"]("message.".concat(friend.sessionId)).listen('MessageEvent', function (e) {
-                    if (friend.sessionId != _this.activeSessionId) {
+                    if (friend.sessionId != _this2.activeSessionId) {
                       friend.unreadCount++; //session đang active thì không count unread message
                     } else {
-                      if (e.userId != _this.id) {
-                        _this.read(); //khi đang trò chuyện lúc nhận tin nhắn
+                      if (e.userId != _this2.id) {
+                        _this2.read(); //khi đang trò chuyện lúc nhận tin nhắn
                         //thì read_at trong chats cũng được update từ NULL sang Carbon::now
                         //nhờ function read().
 
@@ -2263,10 +2327,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return getFriendsAndCheckOnline;
     }(),
     checkOnline: function checkOnline() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.friendForm.forEach(function (friend) {
-        _this2.users.forEach(function (user) {
+        _this3.users.forEach(function (user) {
           if (user.id == friend.id) {
             friend.online = true;
           }
@@ -2301,6 +2365,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return read;
     }(),
+    groupread: function () {
+      var _groupread = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee10() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                _context10.next = 2;
+                return axios.post("/group/".concat(this.activeGroupId, "/read"));
+
+              case 2:
+              case "end":
+                return _context10.stop();
+            }
+          }
+        }, _callee10, this);
+      }));
+
+      function groupread() {
+        return _groupread.apply(this, arguments);
+      }
+
+      return groupread;
+    }(),
     type: function type() {
       Echo["private"]("message.".concat(this.activeSessionId)).whisper('typing', {}); //có thể phát event typing trong method này (không nhất thiết từ controller)
       //`message.${this.activeSessionId}` là private channel có thể dùng cho nhiều event
@@ -2315,15 +2404,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this4 = this;
 
     this.getFriends();
     this.getInvites();
     this.getGroups();
     Echo.join('online').here(function (users) {
-      _this3.users = users;
+      _this4.users = users;
 
-      _this3.friendForm.forEach(function (friend) {
+      _this4.friendForm.forEach(function (friend) {
         users.forEach(function (user) {
           if (user.id == friend.id) {
             friend.online = true;
@@ -2331,17 +2420,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       });
     }).joining(function (user) {
-      _this3.users.push(user);
+      _this4.users.push(user);
 
-      _this3.friendForm.forEach(function (friend) {
+      _this4.friendForm.forEach(function (friend) {
         if (user.id == friend.id) {
           friend.online = true;
         }
       });
     }).leaving(function (user) {
-      _this3.users.splice(_this3.users.indexOf(user), 1);
+      _this4.users.splice(_this4.users.indexOf(user), 1);
 
-      _this3.friendForm.forEach(function (friend) {
+      _this4.friendForm.forEach(function (friend) {
         if (user.id == friend.id) {
           friend.online = false;
         }
@@ -2352,13 +2441,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     //.leaving: user mới logout
 
     Echo["private"]('invite.' + this.id).listen('InviteEvent', function () {
-      _this3.getInvites(); //this.id không đổi cả quá trình nên có thể viết listen tại đây   
+      _this4.getInvites(); //this.id không đổi cả quá trình nên có thể viết listen tại đây   
 
     });
     Echo["private"]('accept.' + this.id).listen('AcceptEvent', function () {
-      _this3.getInvites();
+      _this4.getInvites();
 
-      _this3.getFriendsAndCheckOnline();
+      _this4.getFriendsAndCheckOnline();
     }); // Không viết Echo.private('message.session_id)...ở đây
     // vì mỗi lần auth chỉ có thể kèm theo 1 giá trị id nhất định và không thể thay đổi
     // nhưng session_id thì có nhiều giá trị theo friend list
@@ -58012,7 +58101,145 @@ var render = function() {
                           _vm._s(group.name) +
                           " (" +
                           _vm._s(group.memberCount) +
-                          ")"
+                          ")\n                "
+                      ),
+                      group.unreadCount > 0
+                        ? _c("span", { staticClass: "text-red ml-1" }, [
+                            _vm._v(_vm._s(group.unreadCount))
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: group.msgTyping,
+                              expression: "group.msgTyping"
+                            }
+                          ],
+                          staticClass: "ml-1"
+                        },
+                        [
+                          _c(
+                            "svg",
+                            {
+                              attrs: {
+                                width: "15",
+                                height: "5",
+                                viewBox: "0 0 120 30",
+                                xmlns: "http://www.w3.org/2000/svg",
+                                fill: "#000000"
+                              }
+                            },
+                            [
+                              _c(
+                                "circle",
+                                { attrs: { cx: "15", cy: "15", r: "15" } },
+                                [
+                                  _c("animate", {
+                                    attrs: {
+                                      attributeName: "r",
+                                      from: "15",
+                                      to: "15",
+                                      begin: "0s",
+                                      dur: "0.8s",
+                                      values: "15;9;15",
+                                      calcMode: "linear",
+                                      repeatCount: "indefinite"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("animate", {
+                                    attrs: {
+                                      attributeName: "fill-opacity",
+                                      from: "1",
+                                      to: "1",
+                                      begin: "0s",
+                                      dur: "0.8s",
+                                      values: "1;.5;1",
+                                      calcMode: "linear",
+                                      repeatCount: "indefinite"
+                                    }
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "circle",
+                                {
+                                  attrs: {
+                                    cx: "60",
+                                    cy: "15",
+                                    r: "9",
+                                    "fill-opacity": "0.3"
+                                  }
+                                },
+                                [
+                                  _c("animate", {
+                                    attrs: {
+                                      attributeName: "r",
+                                      from: "9",
+                                      to: "9",
+                                      begin: "0s",
+                                      dur: "0.8s",
+                                      values: "9;15;9",
+                                      calcMode: "linear",
+                                      repeatCount: "indefinite"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("animate", {
+                                    attrs: {
+                                      attributeName: "fill-opacity",
+                                      from: "0.5",
+                                      to: "0.5",
+                                      begin: "0s",
+                                      dur: "0.8s",
+                                      values: ".5;1;.5",
+                                      calcMode: "linear",
+                                      repeatCount: "indefinite"
+                                    }
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "circle",
+                                { attrs: { cx: "105", cy: "15", r: "15" } },
+                                [
+                                  _c("animate", {
+                                    attrs: {
+                                      attributeName: "r",
+                                      from: "15",
+                                      to: "15",
+                                      begin: "0s",
+                                      dur: "0.8s",
+                                      values: "15;9;15",
+                                      calcMode: "linear",
+                                      repeatCount: "indefinite"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("animate", {
+                                    attrs: {
+                                      attributeName: "fill-opacity",
+                                      from: "1",
+                                      to: "1",
+                                      begin: "0s",
+                                      dur: "0.8s",
+                                      values: "1;.5;1",
+                                      calcMode: "linear",
+                                      repeatCount: "indefinite"
+                                    }
+                                  })
+                                ]
+                              )
+                            ]
+                          )
+                        ]
                       )
                     ]
                   )

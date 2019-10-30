@@ -79,7 +79,43 @@
                      :class="activeGroupId==group.id ? 'bg-pink text-black': 'text-blue'"
                     class="flex hover:bg-teal hover:text-black  border-b border-grey-lighter font-serif px-2 py-2"
                     ><svg class="mr-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 1c2.15 0 4.2.4 6.1 1.09L12 16h-1.25L10 20H4l-.75-4H2L.9 10.09A17.93 17.93 0 0 1 7 9zm8.31.17c1.32.18 2.59.48 3.8.92L18 16h-1.25L16 20h-3.96l.37-2h1.25l1.65-8.83zM13 0a4 4 0 1 1-1.33 7.76 5.96 5.96 0 0 0 0-7.52C12.1.1 12.53 0 13 0z"/></svg>
-                    {{group.name}} ({{group.memberCount}})</li>
+                    {{group.name}} ({{group.memberCount}})
+                    <span v-if="group.unreadCount >0" class="text-red ml-1">{{group.unreadCount}}</span>
+                          <span class="ml-1" v-show="group.msgTyping">
+                            <svg  width="15" height="5" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                <circle cx="15" cy="15" r="15">
+                                    <animate attributeName="r" from="15" to="15"
+                                            begin="0s" dur="0.8s"
+                                            values="15;9;15" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    <animate attributeName="fill-opacity" from="1" to="1"
+                                            begin="0s" dur="0.8s"
+                                            values="1;.5;1" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                </circle>
+                                <circle cx="60" cy="15" r="9" fill-opacity="0.3">
+                                    <animate attributeName="r" from="9" to="9"
+                                            begin="0s" dur="0.8s"
+                                            values="9;15;9" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    <animate attributeName="fill-opacity" from="0.5" to="0.5"
+                                            begin="0s" dur="0.8s"
+                                            values=".5;1;.5" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                </circle>
+                                <circle cx="105" cy="15" r="15">
+                                    <animate attributeName="r" from="15" to="15"
+                                            begin="0s" dur="0.8s"
+                                            values="15;9;15" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    <animate attributeName="fill-opacity" from="1" to="1"
+                                            begin="0s" dur="0.8s"
+                                            values="1;.5;1" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                </circle>
+                            </svg>
+                          </span>
+                    </li>
                 </ul>
             </div>
             <message-component
@@ -173,6 +209,12 @@
            showGroup(id) {
                this.activeSessionId='';
                this.activeGroupId = id;
+               this.groups.forEach(group=>{
+                   if(group.id == id) {
+                       group.unreadCount = 0;
+                   }
+               })
+               this.groupread();
            },
 
            async sendEmail(e) {
@@ -195,6 +237,34 @@
             },
             async getGroups() {
               this.groups =(await axios.get('/getgroups')).data.data;
+              this.groups.forEach(group => {
+                  Echo.private(`group.${group.id}`)
+                  .listen('GroupMsgEvent', (e) => {
+                      if (group.id != this.activeGroupId) {
+                          group.unreadCount++;
+                          //group đang active thì không count unread message
+                      } else {
+                          if(e.userId != this.id) {
+                              this.groupread();
+                              //khi đang trò chuyện lúc nhận tin nhắn
+                              //thì read_at trong chats cũng được update từ NULL sang Carbon::now
+                              //nhờ function read().
+                          }
+                      }
+                      })
+                    .listenForWhisper('grouptyping', e=> {
+                        group.msgTyping = true;
+                        setTimeout(()=> {
+                            group.msgTyping=false
+                        }, 3000);
+                        //để hiển thị animated dot khi có người đang soạn mess định gửi cho bạn
+                    });
+                
+                // có thể viết listen event trong từng object từ data của Vue.
+                // khi listen event các prop trong object này sẽ thay đổi
+              });
+
+
                 
             },
 
@@ -254,6 +324,10 @@
 
           async read() {
               await axios.post(`/session/${this.activeSessionId}/read`);
+            // để chuyển các unread mess thành read mess.
+          },
+          async groupread() {
+              await axios.post(`/group/${this.activeGroupId}/read`);
             // để chuyển các unread mess thành read mess.
           },
 
