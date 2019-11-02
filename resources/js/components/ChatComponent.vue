@@ -135,17 +135,16 @@
         </div>
         
         <input-component
-        v-show="activeSessionId > 0"
+        v-show="activeSessionId > 0 || activeGroupId > 0"
         :sessionId="activeSessionId"
         @input="send"
         @typing="type"
-        ></input-component>
-        <group-input-component
-        v-show="activeGroupId > 0"
         :groupId ="activeGroupId"
-        @input="groupsend"
-        @typing="grouptype"
-        ></group-input-component>
+        @groupinput="groupsend"
+        @grouptyping="grouptype"
+        :route="route"
+        ></input-component>
+      
     </div>
 </template>
 
@@ -173,6 +172,7 @@
                friendForm : [],
                users: [],
                groups: [],
+               route: '',
               
 
            }
@@ -204,6 +204,7 @@
                    }
                })
                this.read();
+               this.routeCheck();
              
            },
            showGroup(id) {
@@ -215,6 +216,7 @@
                    }
                })
                this.groupread();
+                this.routeCheck();
            },
 
            async sendEmail(e) {
@@ -345,6 +347,14 @@
               })
           },
 
+           routeCheck() {
+            if (this.activeSessionId > 0) {
+                this.route = `send/${this.activeSessionId}`;
+            } else {
+                this.route = `groupsend/${this.activeGroupId}`;
+            }
+         },
+
 
 
            
@@ -471,8 +481,9 @@
     //viết  :key="friend.id+1000" ở <message-component> để tránh trùng với :key ở <group-component>
     // nếu không viết :key hoặc key trùng đều xuất hiện warning - nghiên cứu thêm
     //<message-component> và group-component> tương đồng nhau nhưng khác nhau ở 1-1 chat và group chat
-    //phải viết 2 component input <input-component> và <group-input-component> vì
-    //khi attachment <file-upload> đến 2 route khác nhau - tìm hiểu thêm
+    //nếu viết 2 component input <input-component> và <group-input-component> 
+    //khi attachment <file-upload> đến 2 route khác nhau - sẽ gây lỗi
+    //nên dùng routeCheck() để bind prop 'route' qua input component
 
 
 </script>

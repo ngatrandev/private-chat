@@ -3,7 +3,7 @@
         <div class="w-1/4"></div>
         <file-upload
            
-            :post-action="'send/'+sessionId"
+            :post-action="route"
             v-model="image"
             @input-filter="inputFilter"
             :headers="{'X-CSRF-TOKEN': token}"
@@ -42,7 +42,7 @@ export default {
             
         }
     },
-    props: ['sessionId'],
+    props: ['sessionId', 'groupId', 'route'],
     components: {Picker},
     watch: {
             emoStatus(emoStatus) {
@@ -52,12 +52,23 @@ export default {
             }
         },
     methods: {
+       
         send() {
-            this.$emit('input', this.text);
-            this.text = '';
+             if (this.sessionId > 0) {
+                this.$emit('input', this.text);
+                this.text = '';
+            } else {
+                this.$emit('groupinput', this.text);
+                this.text = '';
+            }
+            
         },
         type() {
-            this.$emit('typing');
+             if (this.sessionId > 0) {
+                this.$emit('typing'); 
+            } else {
+                this.$emit('grouptyping');  
+            }
         },
        inputFilter(newFile, oldFile, prevent) {
             if (newFile && !oldFile) {
@@ -95,15 +106,7 @@ export default {
                 //các vị trí còn lại khi click vào cửa sổ emotion sẽ đóng
                 //lưu ý cách viết event.target.closest('.emotion')
             },
-
-        
-
-       
-        
-       
-
-   
-    }
+    },
 }
 //dùng submit.prevent để không refresh lại page
 // :post-action="'send/'+sessionId" do có bind sessionId bên dưới nên phải
