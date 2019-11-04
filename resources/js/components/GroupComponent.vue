@@ -14,23 +14,32 @@
                 <dropdown @clear="clearChat"  align=right width="200px"></dropdown>
             </div>
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
-                <li class="py-2 px-2  " v-for="chat in chats"
-                :class="{'text-right':chat.type == 0,
-                'text-red': chat.readAt == null}">
-                
+                <li 
+                class="py-2 px-2  " v-for="chat in chats"
+                :class="{'text-right':chat.type == 0}">
                 <span  v-show="chat.type == 1">
                     <v-gravatar class="-mb-2 rounded-full" :email="chat.from" alt="Nobody" :size="30" default-img="mm" />
                 </span>
                 <span
-                v-show="chat.content"
-                v-text="chat.content"
-                class="px-2 py-1 rounded shadow-lg text-sm"
-                :class="{
-                'bg-blue-lighter':chat.type == 0,
-                'bg-pink-lighter':chat.type == 1
-                }"
+                    v-tooltip="{
+                        content: getReadBy(),
+                        html: true,
+                        show: chat.id == tooltipId,
+                        trigger: 'manual',
+                        placement: 'left',
+                        classes: 'text-black text-xs mr-2 px-1 py-1 border-b border-blue rounded shadow-lg'
+                        }"
+                    @mouseover="readBy(chat.id, chat.type)"
+                    @mouseout="resetTooltipId"
+                    v-show="chat.content"
+                    v-text="chat.content"
+                    class="px-2 py-1 rounded shadow-lg text-sm "
+                    :class="{
+                    'bg-blue-lighter cursor-pointer':chat.type == 0,
+                    'bg-pink-lighter':chat.type == 1
+                    }"
                 ></span>
-                <img class="h-24 rounded shadow-lg" v-show="chat.image" :src="chat.image"  alt="">
+                <img @mouseover="readBy(chat.id, chat.type)" class="h-24 rounded shadow-lg" v-show="chat.image" :src="chat.image"  alt="">
                 <br>
                  <span
                 v-text="chat.send_at"
@@ -45,7 +54,8 @@
         
 </template>
 <script>
-import DropDown from './DropDown'
+import DropDown from './DropDown';
+import _ from 'lodash';
 export default {
     props: ['group', 'isOpen', 'id'],
     components: {DropDown},
@@ -54,7 +64,11 @@ export default {
             chats: [],
             val: '',
             activePeer: false,
-            typingUser: ''
+            typingUser: '',
+            readby: [],
+            val: 'good morning',
+            tooltipId: '',
+            html: ['user1', 'user2']
         }
     },
 
@@ -68,7 +82,40 @@ export default {
         clearChat() {
             // this.chats = [];
             // axios.post(`/session/${this.friend.sessionId}/clear`);
+        },
+
+        readBy: _.debounce (async function (id, type) {
+        //sử dụng debounce kết hợp mouseover để tránh trường hợp mouse chạy qua hàng loạt đối tượng
+        //và func bên dưới bị gọi liên tục
+        //với debounce khi mouseover đối tượng cần thêm 1 khoảng tg xác định mới gọi func bên dưới 1 lần 
+        // do dùng debounce nên phải viết classic function    
+            if(type == 0) {
+                console.log('okay');
+                this.readby = (await axios.post(`/readBy/${id}`)).data;
+
+                this.tooltipId = id;
+
+                setTimeout(()=> {
+                this.tooltipId = '';
+               }, 3000);
+            }
+        }, 1000),
+
+        getReadBy() {
+            if(this.readby.length == 0) {
+                return 'Unread';
+            }
+                let user = Object.values(this.readby);
+                return `Read by: ${user}`;
+        },
+
+        resetTooltipId () {
+            this.tooltipId = '';
+            //khi mouseout lập tức đóng popup (v-tooltip)
+            //không cần đến 3s như đã thiết lập
         }
+
+       
 
            
     },
@@ -97,6 +144,7 @@ export default {
                }
               
            })
+          
            .listenForWhisper('grouptyping', e=> {
                this.activePeer = true;
                this.typingUser = e.name
@@ -163,4 +211,9 @@ export default {
 // dùng height và overflow-scroll để xuất hiện scroll bar
 // dùng v-chat-scroll để chế độ scroll phù hợp với kiểu chat
 // chỉ tô nền cho text thì để text trong thẻ <span></span>
+
+// Do không listen được event để xác định msg đã gửi có được xem chưa
+// Nên dùng readBy function bên trên để fetch dữ liệu từ database
+// Kết hợp với mouseover, debounce, v-tooltip để show thông tin về read at
+// Lưu ý cách dùng v-tooltip để tiện lợi khi show các popup.
 </script>

@@ -23,7 +23,8 @@ class GroupChatResource extends JsonResource
             'type'=>$this->type,
             'readAt'=>$this->read_at? $this->read_at->diffForHumans():null,
             'send_at'=>$this->created_at->format('d/m/y h:i'),
-            'from'=>($this->type == 1)?  $this->getUser($this->group_message_id):''
+            'from'=>($this->type == 1)?  $this->getUser($this->group_message_id):'',
+    
             // chat vẫn trả về được message[content] vì đã có relation 
             // cách format về thời gian trong created_at
         ];

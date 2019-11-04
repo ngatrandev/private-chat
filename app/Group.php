@@ -26,4 +26,26 @@ class Group extends Model
         //mỗi user có nhiều group và mỗi group có nhiều user nên dùng belongsToMany-
     }
 
+    public function recieveChats()
+    {
+        $chats = $this->groupChats->where('read_at',null)
+                                    ->where('type', 1)
+                                    ->where('user_id', auth()->id());
+        return $chats;
+    }
+
+    public function sendChats() 
+    {
+        $arrays = $this->recieveChats();
+        $results = $arrays->map( function ($array) {
+            $chat = GroupChat::where('group_message_id', $array->group_message_id)
+                                ->where('type', 0)
+                                ->where('read_at',null);
+            return $chat;
+        });
+        return $results;
+    }
+
+    
+
 }

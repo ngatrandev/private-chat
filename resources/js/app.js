@@ -17,6 +17,10 @@ import Gravatar from 'vue-gravatar';
  // để dùng gravatar trong vue
 Vue.component('v-gravatar', Gravatar);
 
+import VTooltip from 'v-tooltip'
+ 
+Vue.use(VTooltip)//để dùng v-tooltip hỗ trợ linh hoạt các popup và những tùy chỉnh khác
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
