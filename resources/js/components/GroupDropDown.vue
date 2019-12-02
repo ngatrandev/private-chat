@@ -13,24 +13,39 @@
         </div>
 
         <div v-show="isOpen"
-             class="dropdown-menu absolute z-10 rounded shadow mt-3 bg-white"
+             class="dropdown-menu absolute z-10 rounded shadow mt-3 bg-white border border-grey-dark"
              :class="align === 'left' ? 'pin-l' : 'pin-r'"
              :style="{ width }"
         >
             
-            <input v-model="form.name" 
+            <input 
+            @input="checkButton"
+            v-model="form.name" 
             class="appearance-none bg-transparent border-b  border-grey w-full text-grey-darker mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Your group name"
             >
-            
+        
             <div 
-            v-for="friend in friends" 
-            v-text="friend.name" 
-            @click.prevent="addUser(friend.id)"
-            :class="form.users.includes(friend.id) ? 'bg-green' : ''"  
-            class="hover:bg-grey-light cursor-pointer border-b  border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left"
-            ></div>
-            <div class="flex justify-center">
-                <svg @click="send" class=" cursor-pointer mt-1 mb-1 h-5 w-5 fill-current text-blue hover:text-green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 0l20 10L0 20V0zm0 8v4l10-2L0 8z"/></svg>
+            v-for="friend in friends"
+            class="ml-2 py-1" 
+            :class="checkedcss(friend.id)? 'text-black' : 'text-grey'"
+            >
+                <input
+                @click="checkedcss(friend.id)" 
+                type="checkbox" 
+                :value="friend.id" 
+                v-model="form.users">
+                <label>{{friend.name}}</label>
+            </div>
+            <div class="flex justify-center py-1 border-t border-grey-light">
+                <button v-show="showButton"
+                @click="send"
+                class="bg-blue hover:bg-blue-dark text-white text-xs font-bold py-1 px-2 rounded-full">
+                Create
+                </button>
+                <button v-show="!showButton"
+                class="bg-blue text-white text-xs font-bold py-1 px-2 rounded-full opacity-50 cursor-not-allowed">
+                Create
+                </button>
             </div>
             
            
@@ -47,8 +62,9 @@
                     form: {
                         name: '',
                         users: []
-                    }
-                     }
+                    },
+                    showButton: false,
+            }
         },
         watch: {
             isOpen(isOpen) {
@@ -67,11 +83,6 @@
                 }
             },
 
-            
-            addUser(id) {
-                this.form.users.push(id);
-            },
-
              async send(e) {
                
              await axios.post('/creategroup', this.form);
@@ -82,8 +93,28 @@
               
            },
 
+           checkedcss(id) {
+               this.checkButton();
+               return this.form.users.includes(id);
+               //để thay đổi css khi checked
+               //class ngoài bind được với data, còn có thể bind được cả function (return về boolean)
+           },
+
+           checkButton () {
+               if(this.form.name.trim().length > 0 && this.form.users.length > 0) {
+                   this.showButton = true;
+               } else {
+                   this.showButton = false;
+               }
+           }
+
+
+
         
         }
     }
     // lưu ý cách dùng event.target.closest('.dropdown')
+    // dùng value kết hợp v-model để tương tác với các data trong check box khi check và uncheck
+    // showButton để validate trước khi submit lên server
+    // hiện dùng 2 button cùng vị trí 1 button disable và 1 button có submit.
 </script>

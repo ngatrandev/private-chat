@@ -2984,6 +2984,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['friends', 'align', 'width'],
   data: function data() {
@@ -2992,7 +3007,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       form: {
         name: '',
         users: []
-      }
+      },
+      showButton: false
     };
   },
   watch: {
@@ -3010,9 +3026,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.form.users = [];
         document.removeEventListener('click', this.closeIfClickedOutside);
       }
-    },
-    addUser: function addUser(id) {
-      this.form.users.push(id);
     },
     send: function () {
       var _send = _asyncToGenerator(
@@ -3044,9 +3057,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return send;
-    }()
+    }(),
+    checkedcss: function checkedcss(id) {
+      this.checkButton();
+      return this.form.users.includes(id); //để thay đổi css khi checked
+      //class ngoài bind được với data, còn có thể bind được cả function (return về boolean)
+    },
+    checkButton: function checkButton() {
+      if (this.form.name.trim().length > 0 && this.form.users.length > 0) {
+        this.showButton = true;
+      } else {
+        this.showButton = false;
+      }
+    }
   }
 }); // lưu ý cách dùng event.target.closest('.dropdown')
+// dùng value kết hợp v-model để tương tác với các data trong check box khi check và uncheck
+// showButton để validate trước khi submit lên server
+// hiện dùng 2 button cùng vị trí 1 button disable và 1 button có submit.
 
 /***/ }),
 
@@ -63278,7 +63306,8 @@ var render = function() {
             expression: "isOpen"
           }
         ],
-        staticClass: "dropdown-menu absolute z-10 rounded shadow mt-3 bg-white",
+        staticClass:
+          "dropdown-menu absolute z-10 rounded shadow mt-3 bg-white border border-grey-dark",
         class: _vm.align === "left" ? "pin-l" : "pin-r",
         style: { width: _vm.width }
       },
@@ -63297,45 +63326,118 @@ var render = function() {
           attrs: { type: "text", placeholder: "Your group name" },
           domProps: { value: _vm.form.name },
           on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.form, "name", $event.target.value)
-            }
+            input: [
+              function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.form, "name", $event.target.value)
+              },
+              _vm.checkButton
+            ]
           }
         }),
         _vm._v(" "),
         _vm._l(_vm.friends, function(friend) {
-          return _c("div", {
-            staticClass:
-              "hover:bg-grey-light cursor-pointer border-b  border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left",
-            class: _vm.form.users.includes(friend.id) ? "bg-green" : "",
-            domProps: { textContent: _vm._s(friend.name) },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.addUser(friend.id)
-              }
-            }
-          })
+          return _c(
+            "div",
+            {
+              staticClass: "ml-2 py-1",
+              class: _vm.checkedcss(friend.id) ? "text-black" : "text-grey"
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.users,
+                    expression: "form.users"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  value: friend.id,
+                  checked: Array.isArray(_vm.form.users)
+                    ? _vm._i(_vm.form.users, friend.id) > -1
+                    : _vm.form.users
+                },
+                on: {
+                  click: function($event) {
+                    return _vm.checkedcss(friend.id)
+                  },
+                  change: function($event) {
+                    var $$a = _vm.form.users,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = friend.id,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.form, "users", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.form,
+                            "users",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.form, "users", $$c)
+                    }
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", [_vm._v(_vm._s(friend.name))])
+            ]
+          )
         }),
         _vm._v(" "),
-        _c("div", { staticClass: "flex justify-center" }, [
-          _c(
-            "svg",
-            {
-              staticClass:
-                " cursor-pointer mt-1 mb-1 h-5 w-5 fill-current text-blue hover:text-green",
-              attrs: {
-                xmlns: "http://www.w3.org/2000/svg",
-                viewBox: "0 0 20 20"
+        _c(
+          "div",
+          {
+            staticClass: "flex justify-center py-1 border-t border-grey-light"
+          },
+          [
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.showButton,
+                    expression: "showButton"
+                  }
+                ],
+                staticClass:
+                  "bg-blue hover:bg-blue-dark text-white text-xs font-bold py-1 px-2 rounded-full",
+                on: { click: _vm.send }
               },
-              on: { click: _vm.send }
-            },
-            [_c("path", { attrs: { d: "M0 0l20 10L0 20V0zm0 8v4l10-2L0 8z" } })]
-          )
-        ])
+              [_vm._v("\n            Create\n            ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.showButton,
+                    expression: "!showButton"
+                  }
+                ],
+                staticClass:
+                  "bg-blue text-white text-xs font-bold py-1 px-2 rounded-full opacity-50 cursor-not-allowed"
+              },
+              [_vm._v("\n            Create\n            ")]
+            )
+          ]
+        )
       ],
       2
     )
