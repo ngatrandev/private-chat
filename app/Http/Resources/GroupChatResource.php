@@ -23,7 +23,7 @@ class GroupChatResource extends JsonResource
             'type'=>$this->type,
             'readAt'=>$this->read_at? $this->read_at->diffForHumans():null,
             'send_at'=>$this->created_at->format('d/m/y h:i'),
-            'from'=>($this->type == 1)?  $this->getUser($this->group_message_id):'',
+            'from'=>($this->type == 1)?  $this->getUser($this->from_id):'',
     
             // chat vẫn trả về được message[content] vì đã có relation 
             // cách format về thời gian trong created_at
@@ -31,9 +31,7 @@ class GroupChatResource extends JsonResource
     }
 
     private function getUser($id) {
-        $message = GroupMessage::where('id', $id)->first();
-        $chat = $message->groupChats->where('type', 0)->first();
-        $user = User::where('id',$chat->user_id)->first();//xác định msg được nhận từ user nào trong group
+        $user = User::where('id',$id)->first();
         return $user->email;
     }
 }

@@ -42,6 +42,7 @@ Vue.component('dropdown', require('./components/DropDown.vue').default);
 Vue.component('friend-dropdown', require('./components/FriendDropDown.vue').default);
 Vue.component('group-dropdown', require('./components/GroupDropDown.vue').default);
 Vue.component('group-component', require('./components/GroupComponent.vue').default);
+Vue.component('right-group-dropdown', require('./components/RightGroupDropdown.vue').default);
 
 
 /**

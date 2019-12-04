@@ -11,7 +11,7 @@
                     v-show="user.online"
                     xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
                     </span></h4>
-                <dropdown @clear="clearChat"  align=right width="200px"></dropdown>
+                <right-group-dropdown @clear="clearChat"  align=right width="200px"></right-group-dropdown>
             </div>
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
                 <li 
@@ -66,9 +66,7 @@ export default {
             activePeer: false,
             typingUser: '',
             readby: [],
-            val: 'good morning',
             tooltipId: '',
-            html: ['user1', 'user2']
         }
     },
 
@@ -80,8 +78,8 @@ export default {
            },
 
         clearChat() {
-            // this.chats = [];
-            // axios.post(`/session/${this.friend.sessionId}/clear`);
+            this.chats = [];
+            axios.post(`/group/${this.group.id}/clear`);
         },
 
         readBy: _.debounce (async function (id, type) {

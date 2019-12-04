@@ -43,7 +43,8 @@ class GroupChatController extends Controller
                 $message->groupChats()->create([
                     'group_id'=>$group->id,
                     'type'=>1,
-                    'user_id'=>$member->id
+                    'user_id'=>$member->id,
+                    'from_id'=>auth()->id()
                 ]);
             }
         }
@@ -84,12 +85,55 @@ class GroupChatController extends Controller
 
         $results = $message->groupChats->where('type', 1)
                                          ->where('read_at', '!=', null);
+
+        if(count($results)>0) {
+            $users1 = $results->map(function ($result) {
+                $user = User::find($result->user_id);
+                return $user->name;
+            });
+        } else {
+            $users1 = collect([]);
+            // nếu các chat đều bị xóa sẽ chạy vào đây
+            // viết [] lỗi bên dưới, phải viết collect
+        }
                                        
-        $users = $results->map(function ($result) {
-            $user = User::find($result->user_id);
+        
+
+        $group = Group::find($chat->group_id);
+
+        $members = $group->members;
+
+        $array1 = $members->map(function ($member) {
+            return $member->id;
+        });
+
+        $allChats = $message->groupChats;
+        $array2 = $allChats->map(function ($chat) {
+            return $chat->user_id;
+        });
+
+        $diff = $array1->diff($array2);// tìm sự khác nhau
+
+        $users2 = $diff->map(function ($val) {
+            $user = User::find($val);
             return $user->name;
         });
 
-        return $users;
+        $merged = $users1->merge($users2);
+        // users1 là những user đã xem và chat vẫn còn được lưu trong database
+        // users2 là những user đã xem và đã clear chat
+        return $merged;
+
+
+
+
+    }
+
+    public function clear(Group $group) 
+    {
+        $group->groupChats()->where('user_id', auth()->id())->delete();
+        
+        $group->groupChats->count() == 0 ? $group->groupMessages()->delete() : '';
+        //nếu chats các bên đều bị xóa thì messages cũng bị xóa
     }
 }

@@ -39,5 +39,6 @@ Route::post('/groupsend/{group}', 'GroupChatController@storeMessage');
 Route::post('/group/{group}/chats', 'GroupChatController@chats');
 Route::post('/group/{group}/read', 'GroupChatController@read');
 Route::post('/readBy/{id}', 'GroupChatController@readBy');// {id} logic với $id bên controller
+Route::post('/group/{group}/clear', 'GroupChatController@clear');
 
 

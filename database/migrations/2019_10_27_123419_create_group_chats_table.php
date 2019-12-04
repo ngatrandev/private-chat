@@ -18,6 +18,7 @@ class CreateGroupChatsTable extends Migration
             $table->unsignedBigInteger('group_message_id');
             $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('from_id')->nullable();//để xác định user gửi mess
             $table->boolean('type'); //0-send 1-receive
             $table->dateTime('read_at')->nullable();
             $table->timestamps();
