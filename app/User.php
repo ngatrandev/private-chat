@@ -95,5 +95,10 @@ class User extends Authenticatable
         //trả về tất cả group cuả user 
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
     
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Events\GroupMsgEvent;
 use App\Events\GroupMsgReadEvent;
+use App\Events\NotificationEvent;
 use App\Group;
 use App\GroupChat;
 use App\Http\Resources\GroupChatResource;
@@ -135,5 +136,34 @@ class GroupChatController extends Controller
         
         $group->groupChats->count() == 0 ? $group->groupMessages()->delete() : '';
         //nếu chats các bên đều bị xóa thì messages cũng bị xóa
+    }
+
+    public function delete(Group $group) 
+    {
+        $name = Auth::user()->name;
+        $groupName = $group->name;
+        $members = $group->members;
+        foreach ($members as $member) {
+            if ($member->id !== auth()->id()) {
+                $member->notifications()->create([
+                    'content' => "$name was deleted '$groupName'."
+                ]);
+
+                event(new NotificationEvent($member->id));
+            } else {
+                $member->notifications()->create([
+                    'content' => "You deleted '$groupName'."
+                ]);
+            }
+        };
+        $group->groupChats()->delete();
+        $group->groupMessages()->delete();
+        $group->members()->detach($members);//dùng để xóa database trong bảng group_user
+        $group->delete();
+
+        if(request()->wantsJson()) {
+            return ['message' => '/home'];
+        }
+       
     }
 }

@@ -11,7 +11,13 @@
                     v-show="user.online"
                     xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
                     </span></h4>
-                <right-group-dropdown @clear="clearChat"  align=right width="200px"></right-group-dropdown>
+                <right-group-dropdown 
+                @clear="clearChat"
+                @del="deleteGroup" 
+                :isAdmin="id==group.adminId"
+                :name ="group.name" 
+                align=right width="200px"
+                ></right-group-dropdown>
             </div>
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
                 <li 
@@ -67,6 +73,7 @@ export default {
             typingUser: '',
             readby: [],
             tooltipId: '',
+            isAdmin: false,
         }
     },
 
@@ -88,7 +95,7 @@ export default {
         //với debounce khi mouseover đối tượng cần thêm 1 khoảng tg xác định mới gọi func bên dưới 1 lần 
         // do dùng debounce nên phải viết classic function    
             if(type == 0) {
-                console.log('okay');
+                
                 this.readby = (await axios.post(`/readBy/${id}`)).data;
 
                 this.tooltipId = id;
@@ -111,6 +118,16 @@ export default {
             this.tooltipId = '';
             //khi mouseout lập tức đóng popup (v-tooltip)
             //không cần đến 3s như đã thiết lập
+        },
+
+        checkAdmin () {
+            if(this.id == this.group.adminId) {
+                this.isAdmin = true;
+            }
+        },
+
+        async deleteGroup() {
+         location = (await axios.post(`/group/${this.group.id}/delete`)).data.message;
         }
 
        
@@ -119,6 +136,7 @@ export default {
     },
 
     created() {
+        this.checkAdmin();
         Echo.private('group.'+this.group.id)
            .listen('GroupMsgEvent', (e)=>{
                if(this.id == e.userId) {

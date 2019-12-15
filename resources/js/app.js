@@ -21,6 +21,9 @@ import VTooltip from 'v-tooltip'
  
 Vue.use(VTooltip)//để dùng v-tooltip hỗ trợ linh hoạt các popup và những tùy chỉnh khác
 
+import VModal from 'vue-js-modal'
+ 
+Vue.use(VModal)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -43,6 +46,8 @@ Vue.component('friend-dropdown', require('./components/FriendDropDown.vue').defa
 Vue.component('group-dropdown', require('./components/GroupDropDown.vue').default);
 Vue.component('group-component', require('./components/GroupComponent.vue').default);
 Vue.component('right-group-dropdown', require('./components/RightGroupDropdown.vue').default);
+Vue.component('delete-dialog', require('./components/DeleteDialogModal.vue').default);
+Vue.component('notification', require('./components/Notification.vue').default);
 
 
 /**

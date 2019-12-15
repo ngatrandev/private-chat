@@ -3,19 +3,29 @@
         <div class="flex">
             <div class="w-1/4 border border-grey-light">
                 <div class="flex bg-grey-light font-serif justify-between py-2 border-r border-grey-lighter">
-                    <h4>Your friends</h4>
+                    <div class="flex">
+                        <h4>Friends</h4>
+                        <notification
+                        :id="id"
+                        class="px-1"
+                        align=left width="200px"
+                        >
+                        <span v-show="notification > 0">{{notification}}</span></notification>
+                    </div>
+                    
+                    
                     <div class="flex">
                         <group-dropdown 
                         class="px-1"
-                    align=right width="200px"
-                    :friends="friendForm"
-                    ></group-dropdown>
+                        align=left width="200px"
+                        :friends="friendForm"
+                        ></group-dropdown>
 
-                    <friend-dropdown
-                    class="px-1"
-                    align=right width="200px"
-                    @send1='sendEmail'
-                    ></friend-dropdown>
+                        <friend-dropdown
+                        class="px-1"
+                        align=left
+                        @send1='sendEmail'
+                        ></friend-dropdown>
                     </div>
                     
                 </div>
@@ -173,6 +183,7 @@
                users: [],
                groups: [],
                route: '',
+               notification: 0,
               
 
            }
@@ -356,6 +367,9 @@
          },
 
 
+         
+
+
 
            
 
@@ -375,6 +389,7 @@
           this.getFriends();
           this.getInvites();
           this.getGroups();
+          
           
           
          
@@ -424,6 +439,8 @@
                this.getFriendsAndCheckOnline();
                
            });
+
+           
 
            // Không viết Echo.private('message.session_id)...ở đây
            // vì mỗi lần auth chỉ có thể kèm theo 1 giá trị id nhất định và không thể thay đổi

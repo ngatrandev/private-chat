@@ -40,5 +40,8 @@ Route::post('/group/{group}/chats', 'GroupChatController@chats');
 Route::post('/group/{group}/read', 'GroupChatController@read');
 Route::post('/readBy/{id}', 'GroupChatController@readBy');// {id} logic với $id bên controller
 Route::post('/group/{group}/clear', 'GroupChatController@clear');
-
+Route::post('/group/{group}/delete', 'GroupChatController@delete');
+Route::post('/user/{user}/notifications', 'NotificationController@read');
+Route::post('/user/{user}/count', 'NotificationController@count');
+Route::post('/user/{user}/update', 'NotificationController@update');
 

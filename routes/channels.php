@@ -53,4 +53,10 @@ Broadcast::channel('group.{group}', function ($user, Group $group){
 
 });
 
+Broadcast::channel('notification', function ($user) {
+       
+    return $user;
+
+});
+
 

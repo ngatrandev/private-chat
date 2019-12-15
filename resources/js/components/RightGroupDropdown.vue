@@ -18,18 +18,19 @@
              :style="{ width }"
         >
             <div @click.prevent="clear" class="hover:bg-grey-light cursor-pointer border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Clear chat</div>
-            <div @click.prevent="clear" class="hover:bg-grey-light cursor-pointer border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Delete group</div>
-            <div @click.prevent="clear" class="hover:bg-grey-light cursor-pointer border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Leave group</div>
+            <div v-show="isAdmin" @click.prevent="$modal.show('delete-dialog')" class="hover:bg-grey-light cursor-pointer border-b  border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Delete group</div>
+            <div v-show="!isAdmin" @click.prevent="clear" class="hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Leave group</div>
         </div>
+        <delete-dialog
+        :name="this.name"
+        @del="del"
+        ></delete-dialog>
     </div>
 </template>
 
 <script>
     export default {
-        props: {
-            width: { default: 'auto' },
-            align: { default: 'left' }
-        },
+        props: ['isAdmin', 'align', 'width', 'name' ],
         data() {
             return { isOpen: false,
                     blocked: false }
@@ -52,7 +53,15 @@
             clear() {
                 this.isOpen = false;
                 this.$emit('clear');
-            }
+               
+            },
+
+            del() {
+                this.isOpen = false;
+                this.$emit('del');
+            },
+
+         
         }
     }
     // lưu ý cách dùng event.target.closest('.dropdown')

@@ -17,6 +17,7 @@ class GroupResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'adminId'=>$this->admin_id,
             'name'=>$this->name,
             'members'=>GroupUserResource::collection($this->members),
             // do trả về các user cụ thể nên không viết $this->members()
