@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NotificationEvent;
 use App\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
@@ -21,6 +22,7 @@ class GroupController extends Controller
 
        
         $groupName = $group->name;
+        $admin=Auth::user()->name;
         $members = $group->members;
         foreach ($members as $member) {
             if ($member->id !== auth()->id()) {
@@ -35,6 +37,21 @@ class GroupController extends Controller
                
             }
         };
+
+        //Tạo tin chung (type=2) gửi vào group khác send, recieve
+        $message = $group->groupMessages()->create([
+                    'content'=>"$admin's just created a group: '$groupName'."]);
+        
+        foreach ($members as $member) {
+            
+                $message->groupChats()->create([
+                    'group_id'=>$group->id,
+                    'type'=>2,
+                    'user_id'=>$member->id,
+                    
+                ]);
+            
+        }
 
         if(request()->wantsJson()) {
             return ['message' => '/home'];

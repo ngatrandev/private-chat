@@ -48,7 +48,7 @@ Vue.component('group-component', require('./components/GroupComponent.vue').defa
 Vue.component('right-group-dropdown', require('./components/RightGroupDropdown.vue').default);
 Vue.component('delete-dialog', require('./components/DeleteDialogModal.vue').default);
 Vue.component('notification', require('./components/Notification.vue').default);
-
+Vue.component('leave-dialog', require('./components/LeaveDialogModal.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

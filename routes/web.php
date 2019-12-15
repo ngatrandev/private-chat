@@ -44,4 +44,5 @@ Route::post('/group/{group}/delete', 'GroupChatController@delete');
 Route::post('/user/{user}/notifications', 'NotificationController@read');
 Route::post('/user/{user}/count', 'NotificationController@count');
 Route::post('/user/{user}/update', 'NotificationController@update');
+Route::post('/group/{group}/user/{user}/leave', 'GroupChatController@leave');
 

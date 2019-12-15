@@ -13,7 +13,8 @@
                     </span></h4>
                 <right-group-dropdown 
                 @clear="clearChat"
-                @del="deleteGroup" 
+                @del="deleteGroup"
+                @leave="leaveGroup" 
                 :isAdmin="id==group.adminId"
                 :name ="group.name" 
                 align=right width="200px"
@@ -22,7 +23,8 @@
             <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
                 <li 
                 class="py-2 px-2  " v-for="chat in chats"
-                :class="{'text-right':chat.type == 0}">
+                :class="[{'text-right':chat.type == 0},
+                {'text-center':chat.type == 2},]">
                 <span  v-show="chat.type == 1">
                     <v-gravatar class="-mb-2 rounded-full" :email="chat.from" alt="Nobody" :size="30" default-img="mm" />
                 </span>
@@ -128,6 +130,10 @@ export default {
 
         async deleteGroup() {
          location = (await axios.post(`/group/${this.group.id}/delete`)).data.message;
+        },
+
+        async leaveGroup() {
+         location = (await axios.post(`/group/${this.group.id}/user/${this.id}/leave`)).data.message;
         }
 
        
@@ -159,6 +165,13 @@ export default {
                     });
                }
               
+           })
+           .listen('GroupNotifyMsgEvent', (e)=>{
+               this.chats.push({
+                        content: e.message.content,
+                        type: 2,
+                        send_at:e.message.created_at,
+                    });
            })
           
            .listenForWhisper('grouptyping', e=> {

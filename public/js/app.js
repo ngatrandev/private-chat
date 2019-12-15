@@ -2800,6 +2800,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2934,6 +2936,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return deleteGroup;
+    }(),
+    leaveGroup: function () {
+      var _leaveGroup = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return axios.post("/group/".concat(this.group.id, "/user/").concat(this.id, "/leave"));
+
+              case 2:
+                location = _context4.sent.data.message;
+
+              case 3:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function leaveGroup() {
+        return _leaveGroup.apply(this, arguments);
+      }
+
+      return leaveGroup;
     }()
   },
   created: function created() {
@@ -2960,6 +2990,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           from: e.from
         });
       }
+    }).listen('GroupNotifyMsgEvent', function (e) {
+      _this2.chats.push({
+        content: e.message.content,
+        type: 2,
+        send_at: e.message.created_at
+      });
     }).listenForWhisper('grouptyping', function (e) {
       _this2.activePeer = true;
       _this2.typingUser = e.name;
@@ -3286,6 +3322,46 @@ __webpack_require__.r(__webpack_exports__);
 // :post-action="'send/'+sessionId" do có bind sessionId bên dưới nên phải
 // viết :post-action, tương tự :headers cũng vậy
 //do VueUploadComponent là bên thứ 3, nên các props, methods... đặc trưng riêng của nó
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeaveDialogModal.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LeaveDialogModal.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['name'],
+  methods: {
+    confirm: function confirm() {
+      this.$emit('leave');
+      this.$modal.hide('leave-dialog');
+    }
+  }
+});
 
 /***/ }),
 
@@ -3651,6 +3727,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['isAdmin', 'align', 'width', 'name'],
   data: function data() {
@@ -3680,6 +3760,10 @@ __webpack_require__.r(__webpack_exports__);
     del: function del() {
       this.isOpen = false;
       this.$emit('del');
+    },
+    leave: function leave() {
+      this.isOpen = false;
+      this.$emit('leave');
     }
   }
 }); // lưu ý cách dùng event.target.closest('.dropdown')
@@ -63520,7 +63604,11 @@ var render = function() {
               align: "right",
               width: "200px"
             },
-            on: { clear: _vm.clearChat, del: _vm.deleteGroup }
+            on: {
+              clear: _vm.clearChat,
+              del: _vm.deleteGroup,
+              leave: _vm.leaveGroup
+            }
           })
         ],
         1
@@ -63538,7 +63626,10 @@ var render = function() {
             "li",
             {
               staticClass: "py-2 px-2  ",
-              class: { "text-right": chat.type == 0 }
+              class: [
+                { "text-right": chat.type == 0 },
+                { "text-center": chat.type == 2 }
+              ]
             },
             [
               _c(
@@ -64047,6 +64138,71 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeaveDialogModal.vue?vue&type=template&id=8ff1730e&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LeaveDialogModal.vue?vue&type=template&id=8ff1730e& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "modal",
+    {
+      attrs: {
+        name: "leave-dialog",
+        classes: "p-5 bg-white rounded-lg shadow-lg",
+        height: "auto"
+      }
+    },
+    [
+      _c("div", { staticClass: "font-normal mb-5 text-center text-xl" }, [
+        _vm._v("Do you want to leave '" + _vm._s(_vm.name) + "' ?")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex justify-end" }, [
+        _c(
+          "button",
+          {
+            staticClass:
+              "bg-white border border-blue hover:text-blue-dark text-blue text-sm font-bold py-1 px-2 rounded-full mr-2",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.$modal.hide("leave-dialog")
+              }
+            }
+          },
+          [_vm._v("\n            Cancel")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass:
+              "bg-blue hover:bg-blue-dark text-white text-sm font-bold py-1 px-2 rounded-full",
+            on: { click: _vm.confirm }
+          },
+          [_vm._v("\n            Leave")]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MessageComponent.vue?vue&type=template&id=3f20c7be&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MessageComponent.vue?vue&type=template&id=3f20c7be& ***!
@@ -64442,7 +64598,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.clear($event)
+                  return _vm.$modal.show("leave-dialog")
                 }
               }
             },
@@ -64451,7 +64607,12 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("delete-dialog", { attrs: { name: this.name }, on: { del: _vm.del } })
+      _c("delete-dialog", { attrs: { name: this.name }, on: { del: _vm.del } }),
+      _vm._v(" "),
+      _c("leave-dialog", {
+        attrs: { name: this.name },
+        on: { leave: _vm.leave }
+      })
     ],
     1
   )
@@ -78894,6 +79055,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('group-component', __webpac
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('right-group-dropdown', __webpack_require__(/*! ./components/RightGroupDropdown.vue */ "./resources/js/components/RightGroupDropdown.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('delete-dialog', __webpack_require__(/*! ./components/DeleteDialogModal.vue */ "./resources/js/components/DeleteDialogModal.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('notification', __webpack_require__(/*! ./components/Notification.vue */ "./resources/js/components/Notification.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('leave-dialog', __webpack_require__(/*! ./components/LeaveDialogModal.vue */ "./resources/js/components/LeaveDialogModal.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -79458,6 +79620,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_InputComponent_vue_vue_type_template_id_1e6111fe___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_InputComponent_vue_vue_type_template_id_1e6111fe___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/LeaveDialogModal.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/LeaveDialogModal.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LeaveDialogModal_vue_vue_type_template_id_8ff1730e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LeaveDialogModal.vue?vue&type=template&id=8ff1730e& */ "./resources/js/components/LeaveDialogModal.vue?vue&type=template&id=8ff1730e&");
+/* harmony import */ var _LeaveDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LeaveDialogModal.vue?vue&type=script&lang=js& */ "./resources/js/components/LeaveDialogModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _LeaveDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LeaveDialogModal_vue_vue_type_template_id_8ff1730e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LeaveDialogModal_vue_vue_type_template_id_8ff1730e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/LeaveDialogModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/LeaveDialogModal.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/LeaveDialogModal.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LeaveDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LeaveDialogModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeaveDialogModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LeaveDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LeaveDialogModal.vue?vue&type=template&id=8ff1730e&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/LeaveDialogModal.vue?vue&type=template&id=8ff1730e& ***!
+  \*************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LeaveDialogModal_vue_vue_type_template_id_8ff1730e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LeaveDialogModal.vue?vue&type=template&id=8ff1730e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeaveDialogModal.vue?vue&type=template&id=8ff1730e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LeaveDialogModal_vue_vue_type_template_id_8ff1730e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LeaveDialogModal_vue_vue_type_template_id_8ff1730e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

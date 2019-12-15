@@ -19,12 +19,16 @@
         >
             <div @click.prevent="clear" class="hover:bg-grey-light cursor-pointer border-b border-t border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Clear chat</div>
             <div v-show="isAdmin" @click.prevent="$modal.show('delete-dialog')" class="hover:bg-grey-light cursor-pointer border-b  border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Delete group</div>
-            <div v-show="!isAdmin" @click.prevent="clear" class="hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Leave group</div>
+            <div v-show="!isAdmin" @click.prevent="$modal.show('leave-dialog')" class="hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left">Leave group</div>
         </div>
         <delete-dialog
         :name="this.name"
         @del="del"
         ></delete-dialog>
+        <leave-dialog
+        :name="this.name"
+        @leave="leave"
+        ></leave-dialog>
     </div>
 </template>
 
@@ -59,6 +63,11 @@
             del() {
                 this.isOpen = false;
                 this.$emit('del');
+            },
+
+            leave() {
+                this.isOpen = false;
+                this.$emit('leave');
             },
 
          

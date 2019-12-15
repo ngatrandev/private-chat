@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Events\GroupMsgEvent;
 use App\Events\GroupMsgReadEvent;
+use App\Events\GroupNotifyMsgEvent;
 use App\Events\NotificationEvent;
 use App\Group;
 use App\GroupChat;
@@ -166,4 +167,43 @@ class GroupChatController extends Controller
         }
        
     }
+
+    public function leave(Group $group, User $user)
+    {
+        $members = $group->members;
+        $groupName = $group->name;
+        $name = $user->name;
+        foreach ($members as $member) {
+            if ($member->id == $user->id) {
+                $user->notifications()->create([
+                    'content' => "You've left '$groupName'."
+                ]);
+            }
+        }
+        $message = $group->groupMessages()->create([
+            'content'=>"$name left '$groupName'."]);
+        event(new GroupNotifyMsgEvent($message, $group->id));
+        foreach ($members as $member) {
+            
+                $message->groupChats()->create([
+                    'group_id'=>$group->id,
+                    'type'=>2,
+                    'user_id'=>$member->id,
+                    
+                ]);
+            
+        }
+
+        $group->groupChats()
+        ->where('user_id', $user->id)
+        ->delete();
+
+        $group->members()->detach($user);
+
+        if(request()->wantsJson()) {
+            return ['message' => '/home'];
+        }
+    }
+
+        
 }
