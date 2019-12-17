@@ -32,7 +32,7 @@ class GroupResource extends JsonResource
         $group = Group::where('id', $id)->first();
         $unreadmsg = $group->groupChats
                             ->where('read_at', null)
-                            ->where('type',1)
+                            ->where('type','!=', 0)
                             ->where('user_id', auth()->id())
                             ->count();
         return $unreadmsg;

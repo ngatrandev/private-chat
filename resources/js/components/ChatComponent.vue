@@ -22,8 +22,8 @@
                         ></group-dropdown>
 
                         <friend-dropdown
+                        align=left width="200px"
                         class="px-1"
-                        align=left
                         @send1='sendEmail'
                         ></friend-dropdown>
                     </div>
@@ -154,7 +154,7 @@
         @grouptyping="grouptype"
         :route="route"
         ></input-component>
-      
+        
     </div>
 </template>
 
@@ -263,6 +263,19 @@
                               //thì read_at trong chats cũng được update từ NULL sang Carbon::now
                               //nhờ function read().
                           }
+                      }
+                      })
+                    .listen('GroupNotifyMsgEvent', (e) => {
+                      if (group.id != this.activeGroupId) {
+                          group.unreadCount++;
+                          //group đang active thì không count unread message
+                      } else {
+                          
+                              this.groupread();
+                              //khi đang trò chuyện lúc nhận tin nhắn
+                              //thì read_at trong chats cũng được update từ NULL sang Carbon::now
+                              //nhờ function read().
+                          
                       }
                       })
                     .listenForWhisper('grouptyping', e=> {

@@ -49,7 +49,7 @@ Vue.component('right-group-dropdown', require('./components/RightGroupDropdown.v
 Vue.component('delete-dialog', require('./components/DeleteDialogModal.vue').default);
 Vue.component('notification', require('./components/Notification.vue').default);
 Vue.component('leave-dialog', require('./components/LeaveDialogModal.vue').default);
-
+Vue.component('add-dialog', require('./components/AddDialogModal.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

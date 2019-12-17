@@ -21,11 +21,14 @@ class GroupNotifyMsgEvent implements ShouldBroadcast
      */
     public $message;
     public $groupId;
-    public function __construct($message, $groupId)
+    public $time;
+
+    public function __construct($message, $groupId, $time)
     {
         //để gửi các mess chung đến group nhằm thông báo
         $this->message = $message;
         $this->groupId = $groupId;
+        $this->time = $time;
     }
 
     /**

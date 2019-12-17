@@ -45,4 +45,5 @@ Route::post('/user/{user}/notifications', 'NotificationController@read');
 Route::post('/user/{user}/count', 'NotificationController@count');
 Route::post('/user/{user}/update', 'NotificationController@update');
 Route::post('/group/{group}/user/{user}/leave', 'GroupChatController@leave');
-
+Route::post('/group/{group}/user/{user}/others', 'GroupChatController@getOtherUsers');//get friends but not group's members
+Route::post('/group/{group}/add', 'GroupChatController@addMembers');

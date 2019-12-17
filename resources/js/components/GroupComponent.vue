@@ -58,6 +58,10 @@
             <div v-show="this.activePeer" class="bg-grey-light rounded text-blue text-xs font-bold absolute z-10 pin-b pin-l">
                {{typingUser}}  is typing...
             </div>
+            <add-dialog
+            :group="group"
+            :friends="otherUsers"
+            ></add-dialog>
         </div>
         
 </template>
@@ -76,6 +80,7 @@ export default {
             readby: [],
             tooltipId: '',
             isAdmin: false,
+            otherUsers: [],
         }
     },
 
@@ -134,6 +139,10 @@ export default {
 
         async leaveGroup() {
          location = (await axios.post(`/group/${this.group.id}/user/${this.id}/leave`)).data.message;
+        },
+
+        async getOtherUsers() {
+        this.otherUsers =   ( await axios.post(`/group/${this.group.id}/user/${this.id}/others`)).data;
         }
 
        
@@ -143,6 +152,7 @@ export default {
 
     created() {
         this.checkAdmin();
+        this.getOtherUsers();
         Echo.private('group.'+this.group.id)
            .listen('GroupMsgEvent', (e)=>{
                if(this.id == e.userId) {
@@ -170,7 +180,7 @@ export default {
                this.chats.push({
                         content: e.message.content,
                         type: 2,
-                        send_at:e.message.created_at,
+                        send_at:e.time,
                     });
            })
           

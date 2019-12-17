@@ -1841,6 +1841,118 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddDialogModal.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddDialogModal.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['group', 'friends'],
+  data: function data() {
+    return {
+      form: {
+        users: []
+      },
+      showButton: false
+    };
+  },
+  methods: {
+    checkedcss: function checkedcss(id) {
+      this.checkButton();
+      return this.form.users.includes(id); //để thay đổi css khi checked
+      //class ngoài bind được với data, còn có thể bind được cả function (return về boolean)
+    },
+    checkButton: function checkButton() {
+      if (this.form.users.length > 0) {
+        this.showButton = true;
+      } else {
+        this.showButton = false;
+      }
+    },
+    send: function () {
+      var _send = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(e) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return axios.post("group/".concat(this.group.id, "/add"), this.form);
+
+              case 2:
+                this.form.users = [];
+                this.$modal.hide('add-dialog');
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function send(_x) {
+        return _send.apply(this, arguments);
+      }
+
+      return send;
+    }()
+  }
+}); //ưu điểm khi dùng modal là có thể đặt component này ở vị trí bất kì
+//không bị ràng buộc trong parent-child component
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatComponent.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatComponent.vue?vue&type=script&lang=js& ***!
@@ -2237,6 +2349,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                         //nhờ function read().
 
                       }
+                    }
+                  }).listen('GroupNotifyMsgEvent', function (e) {
+                    if (group.id != _this.activeGroupId) {
+                      group.unreadCount++; //group đang active thì không count unread message
+                    } else {
+                      _this.groupread(); //khi đang trò chuyện lúc nhận tin nhắn
+                      //thì read_at trong chats cũng được update từ NULL sang Carbon::now
+                      //nhờ function read().
+
                     }
                   }).listenForWhisper('grouptyping', function (e) {
                     group.msgTyping = true;
@@ -2802,6 +2923,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2817,7 +2942,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       typingUser: '',
       readby: [],
       tooltipId: '',
-      isAdmin: false
+      isAdmin: false,
+      otherUsers: []
     };
   },
   methods: {
@@ -2964,12 +3090,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return leaveGroup;
+    }(),
+    getOtherUsers: function () {
+      var _getOtherUsers = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return axios.post("/group/".concat(this.group.id, "/user/").concat(this.id, "/others"));
+
+              case 2:
+                this.otherUsers = _context5.sent.data;
+
+              case 3:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this);
+      }));
+
+      function getOtherUsers() {
+        return _getOtherUsers.apply(this, arguments);
+      }
+
+      return getOtherUsers;
     }()
   },
   created: function created() {
     var _this2 = this;
 
     this.checkAdmin();
+    this.getOtherUsers();
     Echo["private"]('group.' + this.group.id).listen('GroupMsgEvent', function (e) {
       if (_this2.id == e.userId) {
         _this2.chats.push({
@@ -2994,7 +3149,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _this2.chats.push({
         content: e.message.content,
         type: 2,
-        send_at: e.message.created_at
+        send_at: e.time
       });
     }).listenForWhisper('grouptyping', function (e) {
       _this2.activePeer = true;
@@ -3697,6 +3852,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -62602,6 +62758,163 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddDialogModal.vue?vue&type=template&id=3390a40f&":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddDialogModal.vue?vue&type=template&id=3390a40f& ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "modal",
+    {
+      attrs: {
+        name: "add-dialog",
+        classes: "p-5 bg-white rounded-lg shadow-lg",
+        height: "auto"
+      }
+    },
+    [
+      _c("div", { staticClass: "font-normal mb-5 text-center text-xl" }, [
+        _vm._v("Choose your friends to add in '" + _vm._s(_vm.group.name) + "'")
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.friends, function(name, id) {
+        return _c(
+          "div",
+          {
+            staticClass: "ml-2 py-1",
+            class: _vm.checkedcss(id) ? "text-black" : "text-grey"
+          },
+          [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.users,
+                  expression: "form.users"
+                }
+              ],
+              attrs: { type: "checkbox" },
+              domProps: {
+                value: id,
+                checked: Array.isArray(_vm.form.users)
+                  ? _vm._i(_vm.form.users, id) > -1
+                  : _vm.form.users
+              },
+              on: {
+                click: function($event) {
+                  return _vm.checkedcss(id)
+                },
+                change: function($event) {
+                  var $$a = _vm.form.users,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = id,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 && _vm.$set(_vm.form, "users", $$a.concat([$$v]))
+                    } else {
+                      $$i > -1 &&
+                        _vm.$set(
+                          _vm.form,
+                          "users",
+                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                        )
+                    }
+                  } else {
+                    _vm.$set(_vm.form, "users", $$c)
+                  }
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", [_vm._v(_vm._s(name))])
+          ]
+        )
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "flex justify-end  py-1 border-t border-grey-light" },
+        [
+          _c(
+            "button",
+            {
+              staticClass:
+                "bg-white border border-blue hover:text-blue-dark text-blue text-sm font-bold py-1 px-2 rounded-full mr-2",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.$modal.hide("add-dialog")
+                }
+              }
+            },
+            [_vm._v("\n            Cancel")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.showButton,
+                  expression: "showButton"
+                }
+              ],
+              staticClass:
+                "bg-blue hover:bg-blue-dark text-white text-xs font-bold py-1 px-2 rounded-full",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.send($event)
+                }
+              }
+            },
+            [_vm._v("\n            Add\n            ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.showButton,
+                  expression: "!showButton"
+                }
+              ],
+              staticClass:
+                "bg-blue text-white text-xs font-bold py-1 px-2 rounded-full opacity-50 cursor-not-allowed"
+            },
+            [_vm._v("\n            Add\n            ")]
+          )
+        ]
+      )
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatComponent.vue?vue&type=template&id=80d584ac&":
 /*!****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatComponent.vue?vue&type=template&id=80d584ac& ***!
@@ -62681,7 +62994,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("friend-dropdown", {
                       staticClass: "px-1",
-                      attrs: { align: "left" },
+                      attrs: { align: "left", width: "200px" },
                       on: { send1: _vm.sendEmail }
                     })
                   ],
@@ -63741,8 +64054,11 @@ var render = function() {
             "bg-grey-light rounded text-blue text-xs font-bold absolute z-10 pin-b pin-l"
         },
         [_vm._v("\n       " + _vm._s(_vm.typingUser) + "  is typing...\n    ")]
-      )
-    ]
+      ),
+      _vm._v(" "),
+      _c("add-dialog", { attrs: { group: _vm.group, friends: _vm.otherUsers } })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -64603,6 +64919,21 @@ var render = function() {
               }
             },
             [_vm._v("Leave group")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "hover:bg-grey-light cursor-pointer border-b border-grey block text-default no-underline text-sm leading-loose px-4 w-full text-left",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.$modal.show("add-dialog")
+                }
+              }
+            },
+            [_vm._v("Add friends")]
           )
         ]
       ),
@@ -79056,6 +79387,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('right-group-dropdown', __w
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('delete-dialog', __webpack_require__(/*! ./components/DeleteDialogModal.vue */ "./resources/js/components/DeleteDialogModal.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('notification', __webpack_require__(/*! ./components/Notification.vue */ "./resources/js/components/Notification.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('leave-dialog', __webpack_require__(/*! ./components/LeaveDialogModal.vue */ "./resources/js/components/LeaveDialogModal.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('add-dialog', __webpack_require__(/*! ./components/AddDialogModal.vue */ "./resources/js/components/AddDialogModal.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -79139,6 +79471,75 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   // chạy php artisan config:cache để clear cache trong .env
 
 });
+
+/***/ }),
+
+/***/ "./resources/js/components/AddDialogModal.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/AddDialogModal.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AddDialogModal_vue_vue_type_template_id_3390a40f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddDialogModal.vue?vue&type=template&id=3390a40f& */ "./resources/js/components/AddDialogModal.vue?vue&type=template&id=3390a40f&");
+/* harmony import */ var _AddDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddDialogModal.vue?vue&type=script&lang=js& */ "./resources/js/components/AddDialogModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AddDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AddDialogModal_vue_vue_type_template_id_3390a40f___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AddDialogModal_vue_vue_type_template_id_3390a40f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AddDialogModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AddDialogModal.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/AddDialogModal.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AddDialogModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddDialogModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddDialogModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AddDialogModal.vue?vue&type=template&id=3390a40f&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/AddDialogModal.vue?vue&type=template&id=3390a40f& ***!
+  \***********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddDialogModal_vue_vue_type_template_id_3390a40f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AddDialogModal.vue?vue&type=template&id=3390a40f& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddDialogModal.vue?vue&type=template&id=3390a40f&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddDialogModal_vue_vue_type_template_id_3390a40f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddDialogModal_vue_vue_type_template_id_3390a40f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

@@ -178,11 +178,12 @@ class GroupChatController extends Controller
                 $user->notifications()->create([
                     'content' => "You've left '$groupName'."
                 ]);
+                
             }
         }
         $message = $group->groupMessages()->create([
             'content'=>"$name left '$groupName'."]);
-        event(new GroupNotifyMsgEvent($message, $group->id));
+        event(new GroupNotifyMsgEvent($message, $group->id, $message->created_at->format('d/m/y h:i')));
         foreach ($members as $member) {
             
                 $message->groupChats()->create([
@@ -198,12 +199,70 @@ class GroupChatController extends Controller
         ->where('user_id', $user->id)
         ->delete();
 
-        $group->members()->detach($user);
+        $group->members()->detach($user);//với attach và detach có thể dùng obj user hoặc id
 
         if(request()->wantsJson()) {
             return ['message' => '/home'];
         }
     }
+
+    public function getOtherUsers(Group $group, User $user) {
+        $members = $group->members;
+        $val1 = $members->pluck('name', 'id');
+        $friends = $user->getFriends();
+        $val2 = $friends->pluck('name', 'id');
+        //dùng pluck để đồng nhất các bộ giá trị trước khi so sánh
+        //ban đầu members có pivot với group nên không đồng nhất
+        $diff = $val2->diff($val1);
+        return $diff;
+    }
+
+
+    public function addMembers(Group $group)
+    {
+        
+        $groupName = $group->name;
+        $name = Auth::user()->name;
+        $newUserId = collect(request('users'));//lưu ý dùng collect
+        $newUsers = $newUserId->map(function ($id) {
+            return User::find($id);
+        });
+        foreach ($newUsers as $user) {
+            
+                $user->notifications()->create([
+                    'content' => "You were add in '$groupName'."]);
+
+                    event(new NotificationEvent($user->id));
+               
+            
+        };
+
+        $newUserName=array();
+        foreach ($newUsers as $user) {
+           array_push($newUserName, $user->name);//lưu ý cách viết method
+        };
+
+        $allName = implode(", ", $newUserName);//dùng chuyển các val của array thành string, cách nhau dấu phẩy
+        
+        $group->members()->attach($newUserId);//dùng các id để attach
+        $members = $group->members;
+        $message = $group->groupMessages()->create([
+            'content'=>"$name's just added '$allName' in '$groupName'."]);
+        event(new GroupNotifyMsgEvent($message, $group->id, $message->created_at->format('d/m/y h:i')));
+        foreach ($members as $member) {
+            
+                $message->groupChats()->create([
+                    'group_id'=>$group->id,
+                    'type'=>2,
+                    'user_id'=>$member->id,
+                    
+                ]);
+            
+        }
+
+        
+    }
+
 
         
 }

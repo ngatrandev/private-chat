@@ -29,7 +29,7 @@ class Group extends Model
     public function recieveChats()
     {
         $chats = $this->groupChats->where('read_at',null)
-                                    ->where('type', 1)
+                                    ->where('type', '!=', 0)
                                     ->where('user_id', auth()->id());
         return $chats;
     }
