@@ -1895,14 +1895,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['group', 'friends'],
+  props: ['group', 'id'],
   data: function data() {
     return {
       form: {
         users: []
       },
-      showButton: false
+      showButton: false,
+      otherUsers: [],
+      canAddFriends: true
     };
   },
   methods: {
@@ -1946,9 +1951,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return send;
+    }(),
+    getOtherUsers: function () {
+      var _getOtherUsers = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.post("/group/".concat(this.group.id, "/user/").concat(this.id, "/others"));
+
+              case 2:
+                this.otherUsers = _context2.sent.data;
+
+                if (this.otherUsers.length == 0) {
+                  this.canAddFriends = false;
+                }
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function getOtherUsers() {
+        return _getOtherUsers.apply(this, arguments);
+      }
+
+      return getOtherUsers;
     }()
   }
 }); //ưu điểm khi dùng modal là có thể đặt component này ở vị trí bất kì
+//có thể dùng @before-open để fetch data chính xác cho dialog này
+//với method getOtherUsers() fetch trực tiếp mỗi khi mở dialog sẽ trả về các data chính xác
 //không bị ràng buộc trong parent-child component
 
 /***/ }),
@@ -2137,6 +2176,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -2162,7 +2202,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       users: [],
       groups: [],
       route: '',
-      notification: 0
+      notification: 0,
+      validEmails: []
     };
   },
   methods: {
@@ -2244,52 +2285,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.groupread();
       this.routeCheck();
     },
-    sendEmail: function () {
-      var _sendEmail = _asyncToGenerator(
+    accept: function () {
+      var _accept = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(e) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(key) {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                this.form.email = e;
-                _context3.next = 3;
-                return axios.post('/user/' + this.id + '/storesession', this.form);
-
-              case 3:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-
-      function sendEmail(_x3) {
-        return _sendEmail.apply(this, arguments);
-      }
-
-      return sendEmail;
-    }(),
-    accept: function () {
-      var _accept = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(key) {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _context4.next = 2;
+                _context3.next = 2;
                 return axios.patch('/sessions/' + key + '/update');
 
               case 2:
               case "end":
-                return _context4.stop();
+                return _context3.stop();
             }
           }
-        }, _callee4);
+        }, _callee3);
       }));
 
-      function accept(_x4) {
+      function accept(_x3) {
         return _accept.apply(this, arguments);
       }
 
@@ -2298,23 +2313,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getInvites: function () {
       var _getInvites = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context5.next = 2;
+                _context4.next = 2;
                 return axios.get('/getinvites');
 
               case 2:
-                this.inviteForm = _context5.sent.data.data;
+                this.inviteForm = _context4.sent.data.data;
 
               case 3:
               case "end":
-                return _context5.stop();
+                return _context4.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee4, this);
       }));
 
       function getInvites() {
@@ -2326,18 +2341,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getGroups: function () {
       var _getGroups = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
         var _this = this;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context6.next = 2;
+                _context5.next = 2;
                 return axios.get('/getgroups');
 
               case 2:
-                this.groups = _context6.sent.data.data;
+                this.groups = _context5.sent.data.data;
                 this.groups.forEach(function (group) {
                   Echo["private"]("group.".concat(group.id)).listen('GroupMsgEvent', function (e) {
                     if (group.id != _this.activeGroupId) {
@@ -2370,10 +2385,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 4:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee5, this);
       }));
 
       function getGroups() {
@@ -2385,18 +2400,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getFriends: function () {
       var _getFriends = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
         var _this2 = this;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                _context7.next = 2;
+                _context6.next = 2;
                 return axios.get('/getfriends');
 
               case 2:
-                this.friendForm = _context7.sent.data.data;
+                this.friendForm = _context6.sent.data.data;
                 this.friendForm.forEach(function (friend) {
                   Echo["private"]("message.".concat(friend.sessionId)).listen('MessageEvent', function (e) {
                     if (friend.sessionId != _this2.activeSessionId) {
@@ -2420,10 +2435,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 4:
               case "end":
-                return _context7.stop();
+                return _context6.stop();
             }
           }
-        }, _callee7, this);
+        }, _callee6, this);
       }));
 
       function getFriends() {
@@ -2435,12 +2450,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getFriendsAndCheckOnline: function () {
       var _getFriendsAndCheckOnline = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
-                _context8.next = 2;
+                _context7.next = 2;
                 return this.getFriends();
 
               case 2:
@@ -2448,10 +2463,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 3:
               case "end":
-                return _context8.stop();
+                return _context7.stop();
             }
           }
-        }, _callee8, this);
+        }, _callee7, this);
       }));
 
       function getFriendsAndCheckOnline() {
@@ -2477,20 +2492,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     read: function () {
       var _read = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee9() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee9$(_context9) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context9.prev = _context9.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
-                _context9.next = 2;
+                _context8.next = 2;
                 return axios.post("/session/".concat(this.activeSessionId, "/read"));
 
               case 2:
               case "end":
-                return _context9.stop();
+                return _context8.stop();
             }
           }
-        }, _callee9, this);
+        }, _callee8, this);
       }));
 
       function read() {
@@ -2502,20 +2517,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     groupread: function () {
       var _groupread = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee10() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee10$(_context10) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee9() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee9$(_context9) {
           while (1) {
-            switch (_context10.prev = _context10.next) {
+            switch (_context9.prev = _context9.next) {
               case 0:
-                _context10.next = 2;
+                _context9.next = 2;
                 return axios.post("/group/".concat(this.activeGroupId, "/read"));
 
               case 2:
               case "end":
-                return _context10.stop();
+                return _context9.stop();
             }
           }
-        }, _callee10, this);
+        }, _callee9, this);
       }));
 
       function groupread() {
@@ -2768,6 +2783,45 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2803,18 +2857,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: {
-    width: {
-      "default": 'auto'
-    },
-    align: {
-      "default": 'left'
-    }
-  },
+  props: ['align', 'width', 'id'],
   data: function data() {
     return {
       isOpen: false,
-      email: ''
+      validEmails: [],
+      invalid: false,
+      valid: false,
+      form: {
+        email: ''
+      }
     };
   },
   watch: {
@@ -2831,10 +2883,89 @@ __webpack_require__.r(__webpack_exports__);
         document.removeEventListener('click', this.closeIfClickedOutside);
       }
     },
-    send: function send() {
+    testEmail: function testEmail(code) {
+      if (this.validEmails.includes(code)) {
+        this.valid = true;
+        this.invalid = false;
+      } else {
+        this.invalid = true;
+        this.valid = false;
+      }
+    },
+    submit: function () {
+      var _submit = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return axios.post('/user/' + this.id + '/storesession', this.form);
+
+              case 2:
+                this.reset();
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function submit() {
+        return _submit.apply(this, arguments);
+      }
+
+      return submit;
+    }(),
+    reset: function reset() {
+      this.invalid = false;
+      this.valid = false;
+      this.form.email = '';
       this.isOpen = false;
-      this.$emit('send1', this.email);
-    }
+    },
+    getValidEmail: function () {
+      var _getValidEmail = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var result;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(this.isOpen == false)) {
+                  _context2.next = 6;
+                  break;
+                }
+
+                this.isOpen = true;
+                _context2.next = 4;
+                return axios.get("/getemails");
+
+              case 4:
+                result = _context2.sent.data;
+                //result trả về là object, dùng Object.values() để chuyển các value thành array
+                this.validEmails = Object.values(result);
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function getValidEmail() {
+        return _getValidEmail.apply(this, arguments);
+      }
+
+      return getValidEmail;
+    }() //Không để getValidEmail() trong created vì chỉ fetch dữ liệu 1 lần khi vào trang
+    //trong khoảng tg đó data có thể thay đổi, làm data trong Vue sai lệch database
+    //phải để function này trong button, mỗi khi click vào button sẽ fetch dữ liệu
+
   }
 }); // lưu ý cách dùng event.target.closest('.dropdown')
 
@@ -3090,41 +3221,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return leaveGroup;
-    }(),
-    getOtherUsers: function () {
-      var _getOtherUsers = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return axios.post("/group/".concat(this.group.id, "/user/").concat(this.id, "/others"));
-
-              case 2:
-                this.otherUsers = _context5.sent.data;
-
-              case 3:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this);
-      }));
-
-      function getOtherUsers() {
-        return _getOtherUsers.apply(this, arguments);
-      }
-
-      return getOtherUsers;
     }()
   },
   created: function created() {
     var _this2 = this;
 
     this.checkAdmin();
-    this.getOtherUsers();
     Echo["private"]('group.' + this.group.id).listen('GroupMsgEvent', function (e) {
       if (_this2.id == e.userId) {
         _this2.chats.push({
@@ -62780,14 +62882,47 @@ var render = function() {
         name: "add-dialog",
         classes: "p-5 bg-white rounded-lg shadow-lg",
         height: "auto"
-      }
+      },
+      on: { "before-open": _vm.getOtherUsers }
     },
     [
-      _c("div", { staticClass: "font-normal mb-5 text-center text-xl" }, [
-        _vm._v("Choose your friends to add in '" + _vm._s(_vm.group.name) + "'")
-      ]),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.canAddFriends,
+              expression: "canAddFriends"
+            }
+          ],
+          staticClass: "font-normal mb-5 text-center text-xl"
+        },
+        [
+          _vm._v(
+            "Choose your friends to add in '" + _vm._s(_vm.group.name) + "'"
+          )
+        ]
+      ),
       _vm._v(" "),
-      _vm._l(_vm.friends, function(name, id) {
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.canAddFriends,
+              expression: "!canAddFriends"
+            }
+          ],
+          staticClass: "font-normal mb-5 text-center text-xl"
+        },
+        [_vm._v("No one to add in '" + _vm._s(_vm.group.name) + "'")]
+      ),
+      _vm._v(" "),
+      _vm._l(_vm.otherUsers, function(name, id) {
         return _c(
           "div",
           {
@@ -62893,8 +63028,8 @@ var render = function() {
                 {
                   name: "show",
                   rawName: "v-show",
-                  value: !_vm.showButton,
-                  expression: "!showButton"
+                  value: !_vm.showButton && _vm.canAddFriends,
+                  expression: "!showButton && canAddFriends"
                 }
               ],
               staticClass:
@@ -62994,8 +63129,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("friend-dropdown", {
                       staticClass: "px-1",
-                      attrs: { align: "left", width: "200px" },
-                      on: { send1: _vm.sendEmail }
+                      attrs: { align: "left", width: "250px", id: _vm.id }
                     })
                   ],
                   1
@@ -63710,7 +63844,7 @@ var render = function() {
         on: {
           click: function($event) {
             $event.preventDefault()
-            _vm.isOpen = !_vm.isOpen
+            return _vm.getValidEmail($event)
           }
         }
       },
@@ -63757,59 +63891,168 @@ var render = function() {
             expression: "isOpen"
           }
         ],
-        staticClass: "dropdown-menu absolute z-10 rounded shadow mt-3",
+        staticClass: "dropdown-menu absolute z-10 rounded shadow mt-3 bg-white",
         class: _vm.align === "left" ? "pin-l" : "pin-r",
         style: { width: _vm.width }
       },
       [
-        _c(
-          "div",
-          {
-            staticClass:
-              "w-full font-serif border border-grey bg-white py-1 px-1"
-          },
-          [
-            _c(
-              "form",
-              {
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.send($event)
-                  }
-                }
-              },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.email,
-                      expression: "email"
-                    }
-                  ],
-                  staticClass:
-                    "shadow text-sm appearance-none border rounded w-full py-1 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline",
+        _c("div", [
+          _c(
+            "div",
+            {
+              staticClass:
+                "flex mb-1 border border-grey p-1 text-xs rounded w-full",
+              class: { "border-red": _vm.invalid }
+            },
+            [
+              _c(
+                "svg",
+                {
+                  staticClass: "h-4 w-4 fill-current text-blue mr-2 mt-1",
                   attrs: {
-                    id: "username",
-                    type: "text",
-                    placeholder: "Add your friend email"
-                  },
-                  domProps: { value: _vm.email },
-                  on: {
-                    input: function($event) {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    viewBox: "0 0 20 20"
+                  }
+                },
+                [
+                  _c("path", {
+                    attrs: {
+                      d:
+                        "M18 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2h16zm-4.37 9.1L20 16v-2l-5.12-3.9L20 6V4l-10 8L0 4v2l5.12 4.1L0 14v2l6.37-4.9L10 14l3.63-2.9z"
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.email,
+                    expression: "form.email"
+                  }
+                ],
+                staticClass: "p-1 :focus outline-none w-full",
+                attrs: { type: "email", placeholder: "Email address" },
+                domProps: { value: _vm.form.email },
+                on: {
+                  input: [
+                    function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.email = $event.target.value
+                      _vm.$set(_vm.form, "email", $event.target.value)
+                    },
+                    function($event) {
+                      return _vm.testEmail($event.target.value)
                     }
+                  ]
+                }
+              }),
+              _vm._v(" "),
+              _vm.valid
+                ? _c("span", [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "h-3 w-3 fill-current text-blue mt-1",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          viewBox: "0 0 20 20"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: { d: "M0 11l2-2 5 5L18 3l2 2L7 18z" }
+                        })
+                      ]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.invalid
+                ? _c("span", [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "h-4 w-4 fill-current text-red mt-1",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          viewBox: "0 0 20 20"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            d:
+                              "M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zM11.4 10l2.83-2.83-1.41-1.41L10 8.59 7.17 5.76 5.76 7.17 8.59 10l-2.83 2.83 1.41 1.41L10 11.41l2.83 2.83 1.41-1.41L11.41 10z"
+                          }
+                        })
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex justify-end  py-1" }, [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "bg-white border border-blue hover:text-blue-dark text-blue text-xs font-bold py-1 px-2 rounded-full mr-2",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.reset()
                   }
-                })
-              ]
+                }
+              },
+              [_vm._v("\n            Cancel")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.valid,
+                    expression: "valid"
+                  }
+                ],
+                staticClass:
+                  "bg-blue border border-blue hover:bg-blue-dark text-white text-xs font-bold py-1 px-2 rounded-full mr-1",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.submit($event)
+                  }
+                }
+              },
+              [_vm._v("\n            Invite\n            ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.valid,
+                    expression: "!valid"
+                  }
+                ],
+                staticClass:
+                  "bg-blue border border-blue text-white text-xs font-bold py-1 px-2 rounded-full opacity-50 cursor-not-allowed mr-1"
+              },
+              [_vm._v("\n            Invite\n            ")]
             )
-          ]
-        )
+          ])
+        ])
       ]
     )
   ])
@@ -64056,7 +64299,7 @@ var render = function() {
         [_vm._v("\n       " + _vm._s(_vm.typingUser) + "  is typing...\n    ")]
       ),
       _vm._v(" "),
-      _c("add-dialog", { attrs: { group: _vm.group, friends: _vm.otherUsers } })
+      _c("add-dialog", { attrs: { group: _vm.group, id: _vm.id } })
     ],
     1
   )

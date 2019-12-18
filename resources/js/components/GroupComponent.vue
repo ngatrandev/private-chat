@@ -60,7 +60,7 @@
             </div>
             <add-dialog
             :group="group"
-            :friends="otherUsers"
+            :id="id"
             ></add-dialog>
         </div>
         
@@ -141,9 +141,7 @@ export default {
          location = (await axios.post(`/group/${this.group.id}/user/${this.id}/leave`)).data.message;
         },
 
-        async getOtherUsers() {
-        this.otherUsers =   ( await axios.post(`/group/${this.group.id}/user/${this.id}/others`)).data;
-        }
+        
 
        
 
@@ -152,7 +150,7 @@ export default {
 
     created() {
         this.checkAdmin();
-        this.getOtherUsers();
+        
         Echo.private('group.'+this.group.id)
            .listen('GroupMsgEvent', (e)=>{
                if(this.id == e.userId) {

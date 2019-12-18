@@ -67,6 +67,22 @@ class User extends Authenticatable
     // trả về các session của 1 user sau khi đã accept invite.
     }
 
+    public function inviteSession()
+    {   
+        return 
+                DB::table('sessions')
+                ->where([
+                ['user2_id', '=', $this->id],
+                ['accept', '=', 0]
+                ])
+                ->orWhere([
+                ['user1_id', '=', $this->id],
+                ['accept', '=', 0]
+                ])
+                ->get();
+    // trả về các session của 1 user khi chưa được accept.
+    }
+
     public function getFriends()
     {
         $arrays = $this->friendSession();
@@ -82,6 +98,23 @@ class User extends Authenticatable
 
     //trả về các user đã kết bạn, lưu ý cách dùng map() methods và if
     //để chuyển từ collection session qua collection user (friend list)
+    }
+
+    public function getInviteUsers()
+    {
+        $arrays = $this->inviteSession();
+        $results = $arrays->map( function ($array) {
+            if($array->user1_id == $this->id) {
+                return User::find($array->user2_id);
+            } 
+                return User::find($array->user1_id);
+            
+        });
+
+        return $results;
+
+    //trả về các user có trong lời mời nhưng chưa được accept
+    //để khi gửi lời mời kết bạn mới không bị trùng lại
     }
 
     

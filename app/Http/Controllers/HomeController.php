@@ -6,6 +6,7 @@ use App\Events\ChatCreate;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\UserResource;
+use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -59,6 +60,23 @@ class HomeController extends Controller
       
         $groups = $user->groups();
         return  GroupResource::collection($groups);
+
+    }
+
+    public function getEmails()
+    {
+        $user=Auth()->user();
+        $allEmails = User::all()->pluck('email');
+        $friendEmails = $user->getFriends()->pluck('email');
+
+        $diff1=$allEmails->diff($friendEmails);//loại những email đã kết bạn
+        $diff2 = $diff1->diff($user->email);//loại email chính mình
+       
+
+        $inviteEmails = $user->getInviteUsers()->pluck('email');
+        $result = $diff2->diff($inviteEmails);//loại những email đã gửi hoặc đã nhận lời mời kết bạn.
+
+        return  $result;
 
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\AcceptEvent;
 use App\Events\InviteEvent;
+use App\Events\NotificationEvent;
 use App\Session;
 use App\User;
 use Illuminate\Http\Request;
@@ -24,8 +25,12 @@ class SessionController extends Controller
             'user2_id'=>$friend->id
         ]);
 
+        $user->notifications()->create([
+            'content' => "You sent an invitation to '$friend->name'."]);
+        event(new NotificationEvent($user->id));
+
         $friendId = $friend->id;
-        event(new InviteEvent($friendId))->toOthers();
+        event(new InviteEvent($friendId));
         
         
         

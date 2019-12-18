@@ -1,8 +1,11 @@
 <template>
-    <modal name="add-dialog" classes="p-5 bg-white rounded-lg shadow-lg" height="auto" >
-            <div class="font-normal mb-5 text-center text-xl">Choose your friends to add in '{{group.name}}'</div>
+    <modal 
+            @before-open="getOtherUsers"
+            name="add-dialog" classes="p-5 bg-white rounded-lg shadow-lg" height="auto" >
+            <div v-show="canAddFriends" class="font-normal mb-5 text-center text-xl">Choose your friends to add in '{{group.name}}'</div>
+            <div v-show="!canAddFriends" class="font-normal mb-5 text-center text-xl">No one to add in '{{group.name}}'</div>
             <div 
-            v-for="(name, id) in friends"
+            v-for="(name, id) in otherUsers"
             class="ml-2 py-1" 
             :class="checkedcss(id)? 'text-black' : 'text-grey'"
             >
@@ -24,7 +27,7 @@
                 class="bg-blue hover:bg-blue-dark text-white text-xs font-bold py-1 px-2 rounded-full">
                 Add
                 </button>
-                <button v-show="!showButton"
+                <button v-show="!showButton && canAddFriends"
                 class="bg-blue text-white text-xs font-bold py-1 px-2 rounded-full opacity-50 cursor-not-allowed">
                 Add
                 </button>
@@ -38,7 +41,7 @@
 <script>
 
 export default {
-    props: ['group', 'friends'],
+    props: ['group', 'id'],
      data() {
             return { 
                     form: {
@@ -46,6 +49,8 @@ export default {
                         users: []
                     },
                     showButton: false,
+                    otherUsers: [],
+                    canAddFriends: true,
             }
         },
     methods: {
@@ -77,10 +82,19 @@ export default {
             this.$modal.hide('add-dialog')
            },
 
+           async getOtherUsers() {
+            this.otherUsers =   ( await axios.post(`/group/${this.group.id}/user/${this.id}/others`)).data;
+            if(this.otherUsers.length == 0) {
+                this.canAddFriends = false;
+            }
+            },
+
          
     },
     
 }
 //ưu điểm khi dùng modal là có thể đặt component này ở vị trí bất kì
+//có thể dùng @before-open để fetch data chính xác cho dialog này
+//với method getOtherUsers() fetch trực tiếp mỗi khi mở dialog sẽ trả về các data chính xác
 //không bị ràng buộc trong parent-child component
 </script>

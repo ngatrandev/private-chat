@@ -22,9 +22,10 @@
                         ></group-dropdown>
 
                         <friend-dropdown
-                        align=left width="200px"
+                        align=left width="250px"
                         class="px-1"
-                        @send1='sendEmail'
+                        :id="id"
+                        
                         ></friend-dropdown>
                     </div>
                     
@@ -184,6 +185,7 @@
                groups: [],
                route: '',
                notification: 0,
+               validEmails: [],
               
 
            }
@@ -228,14 +230,6 @@
                })
                this.groupread();
                 this.routeCheck();
-           },
-
-           async sendEmail(e) {
-               this.form.email = e;
-             await axios.post('/user/'+this.id+ '/storesession', this.form);
-              //this.form.email = request('email') bên controller nếu chỉ viết this.email dễ gây error
-
-              
            },
            
             async accept(key) {
@@ -379,6 +373,8 @@
             }
          },
 
+       
+
 
          
 
@@ -402,6 +398,7 @@
           this.getFriends();
           this.getInvites();
           this.getGroups();
+          
           
           
           
