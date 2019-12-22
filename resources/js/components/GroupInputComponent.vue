@@ -44,7 +44,7 @@ export default {
             
         }
     },
-    props: ['sessionId', 'route'],
+    props: ['groupId', 'route'],
     components: {Picker},
     watch: {
             emoStatus(emoStatus) {

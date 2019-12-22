@@ -1,8 +1,10 @@
 <template>
-    <div class="mx-auto container shadow-md" >
-        <div class="flex">
+    <div class="mx-auto container relative">
+        <div class="flex" >
             <div class="w-1/4 border border-grey-light">
-                <div class="flex bg-grey-light font-serif justify-between py-2 border-r border-grey-lighter">
+                <div 
+                style="height:40px"
+                class="flex bg-grey-light font-serif justify-between py-2 border-r border-grey-lighter">
                     <div class="flex">
                         <h4>Friends</h4>
                         <notification
@@ -31,7 +33,9 @@
                     
                 </div>
                 
-                <ul   class="list-reset overflow-y-scroll relative " style="height:500px">
+                <ul  v-chat-scroll 
+                style="height:540px"
+                class="list-reset overflow-y-scroll relative " >
                     <li v-for="friend in friendForm" 
                     @click.prevent="showChat(friend.sessionId, friend.id)"
                     :class="activeSessionId==friend.sessionId ? 'bg-pink text-black': 'text-blue'"
@@ -135,6 +139,7 @@
             :friend="friend"
             :isOpen="activeSessionId==friend.sessionId"
             :id="id"
+            :route="route"
             ></message-component>
             <group-component
             v-for="group in groups"
@@ -142,27 +147,15 @@
             :group="group"
             :isOpen="activeGroupId==group.id"
             :id="id"
+            :route="route"
             ></group-component>
         </div>
-        
-        <input-component
-        v-show="activeSessionId > 0 || activeGroupId > 0"
-        :sessionId="activeSessionId"
-        @input="send"
-        @typing="type"
-        :groupId ="activeGroupId"
-        @groupinput="groupsend"
-        @grouptyping="grouptype"
-        :route="route"
-        ></input-component>
         
     </div>
 </template>
 
 <script>
-    import MessageComponent from './MessageComponent';
-    import InputComponent from './InputComponent';
-    import FriendDropDown from './FriendDropDown';
+  
     import _ from 'lodash';
     import { async } from 'q';
     
@@ -170,7 +163,7 @@
     
 
     export default {
-       components: {MessageComponent, InputComponent, FriendDropDown},
+   
        props: ['id'],
        data() {
            return {
@@ -192,19 +185,8 @@
        },
        
        methods: {
-           async send(value) {
-             
-               await axios.post(`/send/${this.activeSessionId}`, {
-                   content: value,
-                   to_user: this.activeFriendId
-               })
-           },
-           async groupsend(value) {
-             
-               await axios.post(`/groupsend/${this.activeGroupId}`, {
-                   content: value,
-               })
-           },
+           
+          
            
 
            showChat(val1, val2) {
@@ -217,8 +199,7 @@
                    }
                })
                this.read();
-               this.routeCheck();
-             
+                this.routeCheck();
            },
            showGroup(id) {
                this.activeSessionId='';
@@ -229,7 +210,7 @@
                    }
                })
                this.groupread();
-                this.routeCheck();
+               this.routeCheck();
            },
            
             async accept(key) {
@@ -351,27 +332,20 @@
             // để chuyển các unread mess thành read mess.
           },
 
-          type() {
-              Echo.private(`message.${this.activeSessionId}`).whisper('typing', {})
-              //có thể phát event typing trong method này (không nhất thiết từ controller)
-              //`message.${this.activeSessionId}` là private channel có thể dùng cho nhiều event
-              // như MessageEvent, MsgReadEvent, whisper('typing')...
-              //nhớ chọn enable client event trong Pusher
-          },
-
-          grouptype() {
-              Echo.private(`group.${this.activeGroupId}`).whisper('grouptyping', {
-                  name: window.App.user.name//logic với file app.blade.php
-              })
-          },
-
-           routeCheck() {
+          routeCheck() {
             if (this.activeSessionId > 0) {
-                this.route = `send/${this.activeSessionId}`;
+            this.route = `send/${this.activeSessionId}`;
             } else {
-                this.route = `groupsend/${this.activeGroupId}`;
+            this.route = `groupsend/${this.activeGroupId}`;
             }
-         },
+
+             
+          }
+
+          
+
+          
+
 
        
 

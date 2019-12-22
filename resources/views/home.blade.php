@@ -2,6 +2,6 @@
 
 @section('content')
 
-<chat-component id="{{$user->id}}" ></chat-component>
+<parent-buttons id="{{$user->id}}" ></parent-buttons>
 
 @endsection

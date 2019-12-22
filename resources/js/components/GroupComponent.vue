@@ -1,6 +1,8 @@
 <template>
-        <div v-show="isOpen"  class="w-3/4 border border-grey-light relative">
-            <div class="flex items-center bg-grey-light font-serif justify-between w-full py-1">
+        <div v-show="isOpen"  class="w-3/4 border border-grey-light">
+            <div 
+            style="height:40px"
+            class="flex items-center bg-grey-light font-serif justify-between w-full">
                 <h4  class=" flex items-center">{{group.name}} 
                     <span 
                     class="relative"
@@ -20,48 +22,57 @@
                 align=right width="200px"
                 ></right-group-dropdown>
             </div>
-            <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
-                <li 
-                class="py-2 px-2  " v-for="chat in chats"
-                :class="[{'text-right':chat.type == 0},
-                {'text-center':chat.type == 2},]">
-                <span  v-show="chat.type == 1">
-                    <v-gravatar class="-mb-2 rounded-full" :email="chat.from" alt="Nobody" :size="30" default-img="mm" />
-                </span>
-                <span
-                    v-tooltip="{
-                        content: getReadBy(),
-                        html: true,
-                        show: chat.id == tooltipId,
-                        trigger: 'manual',
-                        placement: 'left',
-                        classes: 'text-black text-xs mr-2 px-1 py-1 border-b border-blue rounded shadow-lg'
+            <div class="relative">
+                <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
+                    <li 
+                    class="py-2 px-2  " v-for="chat in chats"
+                    :class="[{'text-right':chat.type == 0},
+                    {'text-center':chat.type == 2},]">
+                    <span  v-show="chat.type == 1">
+                        <v-gravatar class="-mb-2 rounded-full" :email="chat.from" alt="Nobody" :size="30" default-img="mm" />
+                    </span>
+                    <span
+                        v-tooltip="{
+                            content: getReadBy(),
+                            html: true,
+                            show: chat.id == tooltipId,
+                            trigger: 'manual',
+                            placement: 'left',
+                            classes: 'text-black text-xs mr-2 px-1 py-1 border-b border-blue rounded shadow-lg'
+                            }"
+                        @mouseover="readBy(chat.id, chat.type)"
+                        @mouseout="resetTooltipId"
+                        v-show="chat.content"
+                        v-text="chat.content"
+                        class="px-2 py-1 rounded shadow-lg text-sm "
+                        :class="{
+                        'bg-blue-lighter cursor-pointer':chat.type == 0,
+                        'bg-pink-lighter':chat.type == 1
                         }"
-                    @mouseover="readBy(chat.id, chat.type)"
-                    @mouseout="resetTooltipId"
-                    v-show="chat.content"
-                    v-text="chat.content"
-                    class="px-2 py-1 rounded shadow-lg text-sm "
-                    :class="{
-                    'bg-blue-lighter cursor-pointer':chat.type == 0,
-                    'bg-pink-lighter':chat.type == 1
-                    }"
-                ></span>
-                <img @mouseover="readBy(chat.id, chat.type)" class="h-24 rounded shadow-lg" v-show="chat.image" :src="chat.image"  alt="">
-                <br>
-                 <span
-                v-text="chat.send_at"
-                class=" py-1 text-2xs text-grey"
-                ></span>
-                </li>
-            </ul>
-            <div v-show="this.activePeer" class="bg-grey-light rounded text-blue text-xs font-bold absolute z-10 pin-b pin-l">
-               {{typingUser}}  is typing...
+                    ></span>
+                    <img @mouseover="readBy(chat.id, chat.type)" class="h-24 rounded shadow-lg" v-show="chat.image" :src="chat.image"  alt="">
+                    <br>
+                    <span
+                    v-text="chat.send_at"
+                    class=" py-1 text-2xs text-grey"
+                    ></span>
+                    </li>
+                </ul>
+                <div v-show="this.activePeer" class="bg-grey-light rounded text-blue text-xs font-bold absolute z-10 pin-b pin-l">
+                {{typingUser}}  is typing...
+                </div>
+                <add-dialog
+                :group="group"
+                :id="id"
+                ></add-dialog>
             </div>
-            <add-dialog
-            :group="group"
-            :id="id"
-            ></add-dialog>
+            <group-input-component
+                :groupId="group.id"
+                :route="route"
+                @input="groupsend"
+                @typing="grouptype"
+            ></group-input-component>
+            
         </div>
         
 </template>
@@ -69,7 +80,7 @@
 import DropDown from './DropDown';
 import _ from 'lodash';
 export default {
-    props: ['group', 'isOpen', 'id'],
+    props: ['group', 'isOpen', 'id', 'route'],
     components: {DropDown},
     data() {
         return {
@@ -90,6 +101,19 @@ export default {
         async getMessages() {
             this.chats = (await axios.post(`/group/${this.group.id}/chats`)).data.data;
            },
+
+        async groupsend(value) {
+             
+               await axios.post(`/groupsend/${this.group.id}`, {
+                   content: value,
+               })
+        },
+
+        grouptype() {
+              Echo.private(`group.${this.group.id}`).whisper('grouptyping', {
+                  name: window.App.user.name//logic với file app.blade.php
+              })
+        },
 
         clearChat() {
             this.chats = [];
@@ -141,11 +165,6 @@ export default {
          location = (await axios.post(`/group/${this.group.id}/user/${this.id}/leave`)).data.message;
         },
 
-        
-
-       
-
-           
     },
 
     created() {

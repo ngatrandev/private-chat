@@ -1,41 +1,54 @@
 <template>
-        <div v-show="isOpen"  class="w-3/4 border border-grey-light relative">
-            <div class="flex bg-grey-light font-serif justify-between w-full py-2">
+        <div v-show="isOpen"  class="w-3/4 border border-grey-light ">
+            <div 
+            style="height:40px"
+            class="flex bg-grey-light font-serif justify-between w-full py-2">
                 <h4>{{friend.name}}</h4>
-                <dropdown @clear="clearChat" @blocked="blocked1" @unblocked="unblocked1" align=right width="200px"></dropdown>
+                <dropdown @clear="clearChat" align=right width="200px"></dropdown>
             </div>
-            <ul v-chat-scroll class="list-reset overflow-y-scroll" style="height:500px">
-                <li class="py-2 px-2  " v-for="chat in chats"
-                :class="{'text-right':chat.type == 0,
-                'text-red': chat.readAt == null}">
-                <span
-                v-show="chat.content"
-                v-text="chat.content"
-                class="px-2 py-1 rounded shadow-lg text-sm"
-                :class="{
-                'bg-blue-lighter':chat.type == 0,
-                'bg-pink-lighter':chat.type == 1
-                }"
-                ></span>
-                <img class="h-24 rounded shadow-lg" v-show="chat.image" :src="chat.image"  alt="">
-                <br>
-                 <span
-                v-text="chat.send_at"
-                class=" py-1 text-2xs text-grey"
-                ></span>
-                </li>
-            </ul>
-            <div v-show="this.activePeer" class="text-blue text-xs font-bold absolute pin-b pin-l">
+            <div class="relative">
+                <ul v-chat-scroll 
+                style="height:500px"
+                class="list-reset overflow-y-scroll ">
+                    <li class="py-2 px-2  " v-for="chat in chats"
+                    :class="{'text-right':chat.type == 0,
+                    'text-red': chat.readAt == null}">
+                    <span
+                    v-show="chat.content"
+                    v-text="chat.content"
+                    class="px-2 py-1 rounded shadow-lg text-sm"
+                    :class="{
+                    'bg-blue-lighter':chat.type == 0,
+                    'bg-pink-lighter':chat.type == 1
+                    }"
+                    ></span>
+                    <img class="h-24 rounded shadow-lg" v-show="chat.image" :src="chat.image"  alt="">
+                    <br>
+                    <span
+                    v-text="chat.send_at"
+                    class=" py-1 text-2xs text-grey"
+                    ></span>
+                    </li>
+                </ul>
+                <div v-show="this.activePeer" class="bg-white text-blue text-xs font-bold absolute pin-b pin-l">
                 {{friend.name}} is typing...
+                </div>
             </div>
+            
+            <input-component
+                :sessionId="friend.sessionId"
+                :route="route"
+                @input="send"
+                @typing="type"
+            ></input-component>
         </div>
         
 </template>
 <script>
-import DropDown from './DropDown'
+
 export default {
-    props: ['friend', 'isOpen', 'id'],
-    components: {DropDown},
+    props: ['friend', 'isOpen', 'id', 'route'],
+   
     data() {
         return {
             chats: [],
@@ -46,14 +59,21 @@ export default {
     },
 
     methods: {
-        blocked1() {
-            this.block = true;
+        async send(value) {
+             
+               await axios.post(`/send/${this.friend.sessionId}`, {
+                   content: value,
+                   to_user: this.friend.id
+               })
         },
-
-        unblocked1() {
-           this.block = false;
-        },
-
+        type() {
+              Echo.private(`message.${this.friend.sessionId}`).whisper('typing', {})
+              //có thể phát event typing trong method này (không nhất thiết từ controller)
+              //`message.${this.friend.sessionId}` là private channel có thể dùng cho nhiều event
+              // như MessageEvent, MsgReadEvent, whisper('typing')...
+              //nhớ chọn enable client event trong Pusher
+          },
+       
         async getMessages() {
                this.chats = (await axios.post(`/session/${this.friend.sessionId}/chats`)).data.data;
            },

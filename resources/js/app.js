@@ -41,6 +41,7 @@ Vue.component('file-upload', VueUploadComponent)//Vue-upload-component
 Vue.component('chat-component', require('./components/ChatComponent.vue').default);
 Vue.component('message-component', require('./components/MessageComponent.vue').default);
 Vue.component('input-component', require('./components/InputComponent.vue').default);
+Vue.component('group-input-component', require('./components/GroupInputComponent.vue').default);
 Vue.component('dropdown', require('./components/DropDown.vue').default);
 Vue.component('friend-dropdown', require('./components/FriendDropDown.vue').default);
 Vue.component('group-dropdown', require('./components/GroupDropDown.vue').default);
@@ -50,6 +51,7 @@ Vue.component('delete-dialog', require('./components/DeleteDialogModal.vue').def
 Vue.component('notification', require('./components/Notification.vue').default);
 Vue.component('leave-dialog', require('./components/LeaveDialogModal.vue').default);
 Vue.component('add-dialog', require('./components/AddDialogModal.vue').default);
+Vue.component('parent-buttons', require('./components/ParentButtons.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
