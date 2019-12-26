@@ -22,13 +22,6 @@
                         align=left width="200px"
                         :friends="friendForm"
                         ></group-dropdown>
-
-                        <friend-dropdown
-                        align=left width="250px"
-                        class="px-1"
-                        :id="id"
-                        
-                        ></friend-dropdown>
                     </div>
                     
                 </div>
@@ -83,12 +76,7 @@
                     v-show="friend.online"
                     xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
                     </li>
-                    <li v-for="invite in inviteForm" 
-                    class="flex justify-between border-b border-grey-lighter font-serif px-2 py-2">{{invite.user1_name}}'s invitations
-                            <button @click.prevent="accept(invite.id)" class="bg-blue hover:bg-blue-dark text-xs text-white text-font-bold py-1 px-1 rounded-full">
-                            Accept
-                            </button>
-                    </li>
+                   
                      <li v-for="group in groups" 
                      @click="showGroup(group.id)"
                      :class="activeGroupId==group.id ? 'bg-pink text-black': 'text-blue'"
@@ -164,7 +152,7 @@
 
     export default {
    
-       props: ['id'],
+       props: ['id', 'click'],
        data() {
            return {
             
@@ -172,7 +160,6 @@
                activeFriendId: '',
                activeGroupId: '',
                form: {email: ''},
-               inviteForm : '',
                friendForm : [],
                users: [],
                groups: [],
@@ -183,6 +170,18 @@
 
            }
        },
+       watch: {
+         async   click() {
+                
+                //mỗi lần click vào chat button, giá trị click sẽ thêm 1 đơn vị
+                //do trong watch khi click thay đổi sẽ chạy code bên trong để fetch data chính xác về friend và group
+               
+                this.getGroups();
+                await this.getFriends();//phải await getFriends trước khi checkOnline
+                this.checkOnline();
+          
+            }
+        },
        
        methods: {
            
@@ -213,16 +212,9 @@
                this.routeCheck();
            },
            
-            async accept(key) {
-               
-            await axios.patch('/sessions/'+key+'/update');
-                
-            },
+           
 
-            async getInvites() {
-              this.inviteForm =(await axios.get('/getinvites')).data.data;
-                
-            },
+            
             async getGroups() {
               this.groups =(await axios.get('/getgroups')).data.data;
               this.groups.forEach(group => {
@@ -299,12 +291,6 @@
               });
                 
             },
-
-            async getFriendsAndCheckOnline() {
-             await this.getFriends();
-              this.checkOnline();// check online lập tức sau khi await data pull vào friendForm
-                
-            },
             
           
           checkOnline() {
@@ -370,7 +356,6 @@
 
        created() {
           this.getFriends();
-          this.getInvites();
           this.getGroups();
           
           
@@ -411,18 +396,9 @@
             //.leaving: user mới logout
            
 
-           Echo.private('invite.'+this.id)
-           .listen('InviteEvent', ()=>{
-               this.getInvites();
-            //this.id không đổi cả quá trình nên có thể viết listen tại đây   
-           });
+           
 
-           Echo.private('accept.'+this.id)
-           .listen('AcceptEvent', ()=>{
-               this.getInvites();
-               this.getFriendsAndCheckOnline();
-               
-           });
+           
 
            
 
