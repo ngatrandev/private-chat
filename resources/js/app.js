@@ -40,11 +40,12 @@ Vue.component('file-upload', VueUploadComponent)//Vue-upload-component
 
 Vue.component('chat-component', require('./components/ChatComponent.vue').default);
 Vue.component('contact-component', require('./components/ContactComponent.vue').default);
+Vue.component('team-component', require('./components/TeamComponent.vue').default);
 Vue.component('message-component', require('./components/MessageComponent.vue').default);
 Vue.component('input-component', require('./components/InputComponent.vue').default);
 Vue.component('group-input-component', require('./components/GroupInputComponent.vue').default);
 Vue.component('dropdown', require('./components/DropDown.vue').default);
-Vue.component('group-dropdown', require('./components/GroupDropDown.vue').default);
+
 Vue.component('group-component', require('./components/GroupComponent.vue').default);
 Vue.component('right-group-dropdown', require('./components/RightGroupDropdown.vue').default);
 Vue.component('delete-dialog', require('./components/DeleteDialogModal.vue').default);

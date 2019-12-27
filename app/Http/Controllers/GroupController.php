@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GroupCreateEvent;
 use App\Events\NotificationEvent;
 use App\Group;
 use Illuminate\Http\Request;
@@ -37,6 +38,10 @@ class GroupController extends Controller
                
             }
         };
+        foreach ($members as $member) {
+        event(new GroupCreateEvent($member->id));
+        };
+
 
         //Tạo tin chung (type=2) gửi vào group khác send, recieve
         $message = $group->groupMessages()->create([
@@ -52,11 +57,6 @@ class GroupController extends Controller
                 ]);
             
         }
-
-        if(request()->wantsJson()) {
-            return ['message' => '/home'];
-        }
-
 
         return $group;
     }

@@ -13,7 +13,7 @@
         </div>
 
         <div v-show="isOpen"
-             class="dropdown-menu bg-white absolute py-2 rounded shadow mt-2"
+             class="dropdown-menu bg-white absolute z-10 py-2 rounded shadow mt-2"
              :class="align === 'left' ? 'pin-l' : 'pin-r'"
              :style="{ width }"
         >

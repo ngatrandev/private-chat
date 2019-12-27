@@ -93,7 +93,9 @@
                     </div>
 
             </div>
-            <div  class="flex relative justify-center px-1 py-3 items-center hover:bg-blue-light">
+            <div  @click.prevent="teamClick"
+            :class="{'bg-blue-dark':buttonId==3}"
+            class="flex relative justify-center px-1 py-3 items-center hover:bg-blue-light">
                 <svg class="h-6 w-6 fill-current text-white"  version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     width="80.13px" height="80.13px" viewBox="0 0 80.13 80.13" style="enable-background:new 0 0 80.13 80.13;" xml:space="preserve"
                     >
@@ -193,6 +195,13 @@
         :id="id"
         :invites="inviteForm"
         ></contact-component>
+
+        <team-component
+        v-show="buttonId == 3"
+        :id="id"
+        :click="teamClickCount"
+        :active="buttonId==3"
+        ></team-component>
     </div>
 </template>
 
@@ -203,6 +212,7 @@ export default {
         return {
             buttonId: 1,
             chatClickCount:0,
+            teamClickCount:0,
             inviteForm: '',
             btn1Alert: false,
             btn2Alert: false,
@@ -226,6 +236,12 @@ export default {
             this.btn2Alert = false;
         },
 
+        teamClick() {
+            this.buttonId = 3;
+            this.teamClickCount++;
+            this.btn3Alert = false;
+        },
+
         async getInvites() {
               this.inviteForm =(await axios.get('/getinvites')).data.data;
                 
@@ -244,6 +260,15 @@ export default {
                this.btn1Alert = true;   
                
            });
+
+        Echo.private('notification')
+           .listen('GroupCreateEvent', (e)=>{
+               
+               if (this.id == e.id) {
+                   this.btn1Alert = true;  
+                   this.btn3Alert = true;  
+               }
+           }) 
     }
 
 }

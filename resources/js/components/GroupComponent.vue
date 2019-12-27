@@ -158,11 +158,11 @@ export default {
         },
 
         async deleteGroup() {
-         location = (await axios.post(`/group/${this.group.id}/delete`)).data.message;
+        await axios.post(`/group/${this.group.id}/delete`);
         },
 
         async leaveGroup() {
-         location = (await axios.post(`/group/${this.group.id}/user/${this.id}/leave`)).data.message;
+         await axios.post(`/group/${this.group.id}/user/${this.id}/leave`);
         },
 
     },

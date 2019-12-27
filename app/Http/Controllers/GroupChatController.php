@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Events\GroupCreateEvent;
 use App\Events\GroupMsgEvent;
 use App\Events\GroupMsgReadEvent;
 use App\Events\GroupNotifyMsgEvent;
@@ -154,17 +156,19 @@ class GroupChatController extends Controller
             } else {
                 $member->notifications()->create([
                     'content' => "You deleted '$groupName'."
+                    
                 ]);
+                event(new NotificationEvent($member->id));
             }
         };
+        foreach ($members as $member) {
+        event(new GroupCreateEvent($member->id));
+        };
+
         $group->groupChats()->delete();
         $group->groupMessages()->delete();
         $group->members()->detach($members);//dùng để xóa database trong bảng group_user
         $group->delete();
-
-        if(request()->wantsJson()) {
-            return ['message' => '/home'];
-        }
        
     }
 
@@ -201,9 +205,7 @@ class GroupChatController extends Controller
 
         $group->members()->detach($user);//với attach và detach có thể dùng obj user hoặc id
 
-        if(request()->wantsJson()) {
-            return ['message' => '/home'];
-        }
+        
     }
 
     public function getOtherUsers(Group $group, User $user) {

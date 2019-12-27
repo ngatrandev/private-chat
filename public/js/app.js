@@ -2148,15 +2148,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3125,9 +3116,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.post("/group/".concat(this.group.id, "/delete"));
 
               case 2:
-                location = _context4.sent.data.message;
-
-              case 3:
               case "end":
                 return _context4.stop();
             }
@@ -3153,9 +3141,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.post("/group/".concat(this.group.id, "/user/").concat(this.id, "/leave"));
 
               case 2:
-                location = _context5.sent.data.message;
-
-              case 3:
               case "end":
                 return _context5.stop();
             }
@@ -3254,161 +3239,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Nên dùng readBy function bên trên để fetch dữ liệu từ database
 // Kết hợp với mouseover, debounce, v-tooltip để show thông tin về read at
 // Lưu ý cách dùng v-tooltip để tiện lợi khi show các popup.
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GroupDropDown.vue?vue&type=script&lang=js&":
-/*!************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/GroupDropDown.vue?vue&type=script&lang=js& ***!
-  \************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['friends', 'align', 'width'],
-  data: function data() {
-    return {
-      isOpen: false,
-      form: {
-        name: '',
-        users: []
-      },
-      showButton: false
-    };
-  },
-  watch: {
-    isOpen: function isOpen(_isOpen) {
-      if (_isOpen) {
-        document.addEventListener('click', this.closeIfClickedOutside);
-      }
-    }
-  },
-  methods: {
-    closeIfClickedOutside: function closeIfClickedOutside(event) {
-      if (!event.target.closest('.dropdown')) {
-        this.isOpen = false;
-        this.form.name = '';
-        this.form.users = [];
-        document.removeEventListener('click', this.closeIfClickedOutside);
-      }
-    },
-    send: function () {
-      var _send = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(e) {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return axios.post('/creategroup', this.form);
-
-              case 2:
-                location = _context.sent.data.message;
-                //this.form.email = request('email') bên controller nếu chỉ viết this.email dễ gây error
-                this.isOpen = false;
-                this.form.name = '';
-                this.form.users = [];
-
-              case 6:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      function send(_x) {
-        return _send.apply(this, arguments);
-      }
-
-      return send;
-    }(),
-    checkedcss: function checkedcss(id) {
-      this.checkButton();
-      return this.form.users.includes(id); //để thay đổi css khi checked
-      //class ngoài bind được với data, còn có thể bind được cả function (return về boolean)
-    },
-    checkButton: function checkButton() {
-      if (this.form.name.trim().length > 0 && this.form.users.length > 0) {
-        this.showButton = true;
-      } else {
-        this.showButton = false;
-      }
-    }
-  }
-}); // lưu ý cách dùng event.target.closest('.dropdown')
-// dùng value kết hợp v-model để tương tác với các data trong check box khi check và uncheck
-// showButton để validate trước khi submit lên server
-// hiện dùng 2 button cùng vị trí 1 button disable và 1 button có submit.
 
 /***/ }),
 
@@ -4246,12 +4076,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['id'],
   data: function data() {
     return {
       buttonId: 1,
       chatClickCount: 0,
+      teamClickCount: 0,
       inviteForm: '',
       btn1Alert: false,
       btn2Alert: false,
@@ -4269,6 +4109,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.buttonId = 2;
       this.getInvites();
       this.btn2Alert = false;
+    },
+    teamClick: function teamClick() {
+      this.buttonId = 3;
+      this.teamClickCount++;
+      this.btn3Alert = false;
     },
     getInvites: function () {
       var _getInvites = _asyncToGenerator(
@@ -4307,6 +4152,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
     Echo["private"]('accept.' + this.id).listen('AcceptEvent', function () {
       _this.btn1Alert = true;
+    });
+    Echo["private"]('notification').listen('GroupCreateEvent', function (e) {
+      if (_this.id == e.id) {
+        _this.btn1Alert = true;
+        _this.btn3Alert = true;
+      }
     });
   }
 });
@@ -4393,6 +4244,227 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 }); // lưu ý cách dùng event.target.closest('.dropdown')
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TeamComponent.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TeamComponent.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['id', 'click', 'active'],
+  data: function data() {
+    return {
+      groups: [],
+      friends: [],
+      form: {
+        name: '',
+        users: []
+      },
+      showButton: false,
+      showList: false
+    };
+  },
+  watch: {
+    click: function click() {
+      //mỗi lần click vào chat button, giá trị click sẽ thêm 1 đơn vị
+      //do trong watch khi click thay đổi sẽ chạy code bên trong để fetch data chính xác về group
+      this.getGroups();
+    },
+    active: function active(_active) {
+      if (!_active) {
+        this.showList = false;
+      }
+    }
+  },
+  methods: {
+    getGroups: function () {
+      var _getGroups = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return axios.get('/getgroups');
+
+              case 2:
+                this.groups = _context.sent.data.data;
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function getGroups() {
+        return _getGroups.apply(this, arguments);
+      }
+
+      return getGroups;
+    }(),
+    getFriends: function () {
+      var _getFriends = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.get('/getfriends');
+
+              case 2:
+                this.friends = _context2.sent.data.data;
+                this.showList = true;
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function getFriends() {
+        return _getFriends.apply(this, arguments);
+      }
+
+      return getFriends;
+    }(),
+    send: function () {
+      var _send = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(e) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return axios.post('/creategroup', this.form);
+
+              case 2:
+                this.form.name = '';
+                this.form.users = [];
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function send(_x) {
+        return _send.apply(this, arguments);
+      }
+
+      return send;
+    }(),
+    checkedcss: function checkedcss(id) {
+      this.checkButton();
+      return this.form.users.includes(id); //để thay đổi css khi checked
+      //class ngoài bind được với data, còn có thể bind được cả function (return về boolean)
+    },
+    checkButton: function checkButton() {
+      if (this.form.name.trim().length > 0 && this.form.users.length > 0) {
+        this.showButton = true;
+      } else {
+        this.showButton = false;
+      }
+    }
+  }
+});
 
 /***/ }),
 
@@ -63443,7 +63515,7 @@ var render = function() {
             "div",
             {
               staticClass:
-                "flex bg-grey-light font-serif justify-between py-2 border-r border-grey-lighter",
+                "flex bg-grey-light font-serif justify-center py-2 border-r border-grey-lighter",
               staticStyle: { height: "40px" }
             },
             [
@@ -63451,7 +63523,7 @@ var render = function() {
                 "div",
                 { staticClass: "flex" },
                 [
-                  _c("h4", [_vm._v("Friends")]),
+                  _c("h4", [_vm._v("Chats")]),
                   _vm._v(" "),
                   _c(
                     "notification",
@@ -63478,22 +63550,6 @@ var render = function() {
                   )
                 ],
                 1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "flex" },
-                [
-                  _c("group-dropdown", {
-                    staticClass: "px-1",
-                    attrs: {
-                      align: "left",
-                      width: "200px",
-                      friends: _vm.friendForm
-                    }
-                  })
-                ],
-                1
               )
             ]
           ),
@@ -63501,7 +63557,6 @@ var render = function() {
           _c(
             "ul",
             {
-              directives: [{ name: "chat-scroll", rawName: "v-chat-scroll" }],
               staticClass: "list-reset overflow-y-scroll relative ",
               staticStyle: { height: "540px" }
             },
@@ -64682,221 +64737,6 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GroupDropDown.vue?vue&type=template&id=44f65116&":
-/*!****************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/GroupDropDown.vue?vue&type=template&id=44f65116& ***!
-  \****************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "dropdown relative" }, [
-    _c(
-      "div",
-      {
-        staticClass: "dropdown-toggle",
-        attrs: { "aria-haspopup": "true", "aria-expanded": _vm.isOpen },
-        on: {
-          click: function($event) {
-            $event.preventDefault()
-            _vm.isOpen = !_vm.isOpen
-          }
-        }
-      },
-      [
-        _c(
-          "button",
-          {
-            staticClass:
-              "items-center no-underline text-sm focus:outline-none hover:text-red"
-          },
-          [
-            _c(
-              "svg",
-              {
-                staticClass: "h-5 w-5 fill-current",
-                class: _vm.isOpen ? "text-red" : "text-default",
-                attrs: {
-                  xmlns: "http://www.w3.org/2000/svg",
-                  viewBox: "0 0 20 20"
-                }
-              },
-              [
-                _c("path", {
-                  attrs: {
-                    d:
-                      "M7 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 1c2.15 0 4.2.4 6.1 1.09L12 16h-1.25L10 20H4l-.75-4H2L.9 10.09A17.93 17.93 0 0 1 7 9zm8.31.17c1.32.18 2.59.48 3.8.92L18 16h-1.25L16 20h-3.96l.37-2h1.25l1.65-8.83zM13 0a4 4 0 1 1-1.33 7.76 5.96 5.96 0 0 0 0-7.52C12.1.1 12.53 0 13 0z"
-                  }
-                })
-              ]
-            )
-          ]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.isOpen,
-            expression: "isOpen"
-          }
-        ],
-        staticClass:
-          "dropdown-menu absolute z-10 rounded shadow mt-3 bg-white border border-grey-dark",
-        class: _vm.align === "left" ? "pin-l" : "pin-r",
-        style: { width: _vm.width }
-      },
-      [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.form.name,
-              expression: "form.name"
-            }
-          ],
-          staticClass:
-            "appearance-none bg-transparent border-b  border-grey w-full text-grey-darker mr-3 py-1 px-2 leading-tight focus:outline-none",
-          attrs: { type: "text", placeholder: "Your group name" },
-          domProps: { value: _vm.form.name },
-          on: {
-            input: [
-              function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.form, "name", $event.target.value)
-              },
-              _vm.checkButton
-            ]
-          }
-        }),
-        _vm._v(" "),
-        _vm._l(_vm.friends, function(friend) {
-          return _c(
-            "div",
-            {
-              staticClass: "ml-2 py-1",
-              class: _vm.checkedcss(friend.id) ? "text-black" : "text-grey"
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.form.users,
-                    expression: "form.users"
-                  }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  value: friend.id,
-                  checked: Array.isArray(_vm.form.users)
-                    ? _vm._i(_vm.form.users, friend.id) > -1
-                    : _vm.form.users
-                },
-                on: {
-                  click: function($event) {
-                    return _vm.checkedcss(friend.id)
-                  },
-                  change: function($event) {
-                    var $$a = _vm.form.users,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = friend.id,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(_vm.form, "users", $$a.concat([$$v]))
-                      } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            _vm.form,
-                            "users",
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
-                      }
-                    } else {
-                      _vm.$set(_vm.form, "users", $$c)
-                    }
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", [_vm._v(_vm._s(friend.name))])
-            ]
-          )
-        }),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "flex justify-center py-1 border-t border-grey-light"
-          },
-          [
-            _c(
-              "button",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.showButton,
-                    expression: "showButton"
-                  }
-                ],
-                staticClass:
-                  "bg-blue hover:bg-blue-dark text-white text-xs font-bold py-1 px-2 rounded-full",
-                on: { click: _vm.send }
-              },
-              [_vm._v("\n            Create\n            ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.showButton,
-                    expression: "!showButton"
-                  }
-                ],
-                staticClass:
-                  "bg-blue text-white text-xs font-bold py-1 px-2 rounded-full opacity-50 cursor-not-allowed"
-              },
-              [_vm._v("\n            Create\n            ")]
-            )
-          ]
-        )
-      ],
-      2
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GroupInputComponent.vue?vue&type=template&id=697a94d2&":
 /*!**********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/GroupInputComponent.vue?vue&type=template&id=697a94d2& ***!
@@ -65894,7 +65734,14 @@ var render = function() {
           "div",
           {
             staticClass:
-              "flex relative justify-center px-1 py-3 items-center hover:bg-blue-light"
+              "flex relative justify-center px-1 py-3 items-center hover:bg-blue-light",
+            class: { "bg-blue-dark": _vm.buttonId == 3 },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.teamClick($event)
+              }
+            }
           },
           [
             _c(
@@ -66214,6 +66061,22 @@ var render = function() {
           }
         ],
         attrs: { id: _vm.id, invites: _vm.inviteForm }
+      }),
+      _vm._v(" "),
+      _c("team-component", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.buttonId == 3,
+            expression: "buttonId == 3"
+          }
+        ],
+        attrs: {
+          id: _vm.id,
+          click: _vm.teamClickCount,
+          active: _vm.buttonId == 3
+        }
       })
     ],
     1
@@ -66305,7 +66168,7 @@ var render = function() {
             }
           ],
           staticClass:
-            "dropdown-menu bg-white absolute py-2 rounded shadow mt-2",
+            "dropdown-menu bg-white absolute z-10 py-2 rounded shadow mt-2",
           class: _vm.align === "left" ? "pin-l" : "pin-r",
           style: { width: _vm.width }
         },
@@ -66399,6 +66262,264 @@ var render = function() {
   )
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TeamComponent.vue?vue&type=template&id=4916dec5&":
+/*!****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TeamComponent.vue?vue&type=template&id=4916dec5& ***!
+  \****************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "mx-auto container relative" }, [
+    _c("div", { staticClass: "flex" }, [
+      _c("div", { staticClass: "w-1/4 border border-grey-light" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "ul",
+          {
+            staticClass: "list-reset overflow-y-scroll relative mt-1",
+            staticStyle: { height: "540px" }
+          },
+          _vm._l(_vm.groups, function(group) {
+            return _c(
+              "li",
+              {
+                staticClass:
+                  "flex justify-between border-b border-grey-lighter font-serif px-2 py-2"
+              },
+              [
+                _vm._v(
+                  "\n                 " +
+                    _vm._s(group.name) +
+                    " (" +
+                    _vm._s(group.memberCount) +
+                    ")"
+                )
+              ]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "w-3/4 border border-grey-light " }, [
+        _vm._m(1),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "relative overflow-y-scroll",
+            staticStyle: { height: "540px" }
+          },
+          [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "rounded shadow mt-1 bg-white border-b border-grey-dark"
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.name,
+                      expression: "form.name"
+                    }
+                  ],
+                  staticClass:
+                    "appearance-none bg-transparent border-b  border-teal w-full text-black mr-3 py-1 px-2 leading-tight focus:outline-none",
+                  attrs: { type: "text", placeholder: "Your group name" },
+                  domProps: { value: _vm.form.name },
+                  on: {
+                    input: [
+                      function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "name", $event.target.value)
+                      },
+                      _vm.checkButton
+                    ],
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.getFriends($event)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm._l(_vm.friends, function(friend) {
+                  return _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.showList,
+                          expression: "showList"
+                        }
+                      ],
+                      staticClass: "ml-2 py-1",
+                      class: _vm.checkedcss(friend.id)
+                        ? "text-black"
+                        : "text-grey"
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.users,
+                            expression: "form.users"
+                          }
+                        ],
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          value: friend.id,
+                          checked: Array.isArray(_vm.form.users)
+                            ? _vm._i(_vm.form.users, friend.id) > -1
+                            : _vm.form.users
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.checkedcss(friend.id)
+                          },
+                          change: function($event) {
+                            var $$a = _vm.form.users,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = friend.id,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(_vm.form, "users", $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.form,
+                                    "users",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(_vm.form, "users", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("label", [_vm._v(_vm._s(friend.name))])
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "flex justify-center py-1 border-t border-grey-light"
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.showButton,
+                            expression: "showButton"
+                          }
+                        ],
+                        staticClass:
+                          "bg-blue hover:bg-blue-dark text-white text-xs font-bold py-1 px-2 rounded-full",
+                        on: { click: _vm.send }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Create\n                        "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.showButton,
+                            expression: "!showButton"
+                          }
+                        ],
+                        staticClass:
+                          "bg-blue text-white text-xs font-bold py-1 px-2 rounded-full opacity-50 cursor-not-allowed"
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Create\n                        "
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ],
+              2
+            )
+          ]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "flex bg-grey-light font-serif justify-center py-2 border-r border-grey-lighter",
+        staticStyle: { height: "40px" }
+      },
+      [_c("div", { staticClass: "flex" }, [_c("h4", [_vm._v("Your Groups")])])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "flex bg-grey-light font-serif justify-center w-full py-2",
+        staticStyle: { height: "40px" }
+      },
+      [_c("h4", [_vm._v("Create new group")])]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -80828,11 +80949,11 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('file-upload', VueUploadCom
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('chat-component', __webpack_require__(/*! ./components/ChatComponent.vue */ "./resources/js/components/ChatComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('contact-component', __webpack_require__(/*! ./components/ContactComponent.vue */ "./resources/js/components/ContactComponent.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('team-component', __webpack_require__(/*! ./components/TeamComponent.vue */ "./resources/js/components/TeamComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('message-component', __webpack_require__(/*! ./components/MessageComponent.vue */ "./resources/js/components/MessageComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('input-component', __webpack_require__(/*! ./components/InputComponent.vue */ "./resources/js/components/InputComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('group-input-component', __webpack_require__(/*! ./components/GroupInputComponent.vue */ "./resources/js/components/GroupInputComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('dropdown', __webpack_require__(/*! ./components/DropDown.vue */ "./resources/js/components/DropDown.vue")["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('group-dropdown', __webpack_require__(/*! ./components/GroupDropDown.vue */ "./resources/js/components/GroupDropDown.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('group-component', __webpack_require__(/*! ./components/GroupComponent.vue */ "./resources/js/components/GroupComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('right-group-dropdown', __webpack_require__(/*! ./components/RightGroupDropdown.vue */ "./resources/js/components/RightGroupDropdown.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('delete-dialog', __webpack_require__(/*! ./components/DeleteDialogModal.vue */ "./resources/js/components/DeleteDialogModal.vue")["default"]);
@@ -81340,75 +81461,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/GroupDropDown.vue":
-/*!***************************************************!*\
-  !*** ./resources/js/components/GroupDropDown.vue ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _GroupDropDown_vue_vue_type_template_id_44f65116___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GroupDropDown.vue?vue&type=template&id=44f65116& */ "./resources/js/components/GroupDropDown.vue?vue&type=template&id=44f65116&");
-/* harmony import */ var _GroupDropDown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GroupDropDown.vue?vue&type=script&lang=js& */ "./resources/js/components/GroupDropDown.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _GroupDropDown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _GroupDropDown_vue_vue_type_template_id_44f65116___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _GroupDropDown_vue_vue_type_template_id_44f65116___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/GroupDropDown.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/GroupDropDown.vue?vue&type=script&lang=js&":
-/*!****************************************************************************!*\
-  !*** ./resources/js/components/GroupDropDown.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GroupDropDown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./GroupDropDown.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GroupDropDown.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GroupDropDown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/GroupDropDown.vue?vue&type=template&id=44f65116&":
-/*!**********************************************************************************!*\
-  !*** ./resources/js/components/GroupDropDown.vue?vue&type=template&id=44f65116& ***!
-  \**********************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_GroupDropDown_vue_vue_type_template_id_44f65116___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./GroupDropDown.vue?vue&type=template&id=44f65116& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GroupDropDown.vue?vue&type=template&id=44f65116&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_GroupDropDown_vue_vue_type_template_id_44f65116___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_GroupDropDown_vue_vue_type_template_id_44f65116___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
 /***/ "./resources/js/components/GroupInputComponent.vue":
 /*!*********************************************************!*\
   !*** ./resources/js/components/GroupInputComponent.vue ***!
@@ -81887,6 +81939,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RightGroupDropdown_vue_vue_type_template_id_4699ba9f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RightGroupDropdown_vue_vue_type_template_id_4699ba9f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TeamComponent.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/TeamComponent.vue ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TeamComponent_vue_vue_type_template_id_4916dec5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TeamComponent.vue?vue&type=template&id=4916dec5& */ "./resources/js/components/TeamComponent.vue?vue&type=template&id=4916dec5&");
+/* harmony import */ var _TeamComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TeamComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/TeamComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TeamComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TeamComponent_vue_vue_type_template_id_4916dec5___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TeamComponent_vue_vue_type_template_id_4916dec5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TeamComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TeamComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/TeamComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TeamComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TeamComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TeamComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TeamComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TeamComponent.vue?vue&type=template&id=4916dec5&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/TeamComponent.vue?vue&type=template&id=4916dec5& ***!
+  \**********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TeamComponent_vue_vue_type_template_id_4916dec5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TeamComponent.vue?vue&type=template&id=4916dec5& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TeamComponent.vue?vue&type=template&id=4916dec5&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TeamComponent_vue_vue_type_template_id_4916dec5___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TeamComponent_vue_vue_type_template_id_4916dec5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

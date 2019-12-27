@@ -4,9 +4,9 @@
             <div class="w-1/4 border border-grey-light">
                 <div 
                 style="height:40px"
-                class="flex bg-grey-light font-serif justify-between py-2 border-r border-grey-lighter">
+                class="flex bg-grey-light font-serif justify-center py-2 border-r border-grey-lighter">
                     <div class="flex">
-                        <h4>Friends</h4>
+                        <h4>Chats</h4>
                         <notification
                         :id="id"
                         class="px-1"
@@ -15,18 +15,9 @@
                         <span v-show="notification > 0">{{notification}}</span></notification>
                     </div>
                     
-                    
-                    <div class="flex">
-                        <group-dropdown 
-                        class="px-1"
-                        align=left width="200px"
-                        :friends="friendForm"
-                        ></group-dropdown>
-                    </div>
-                    
                 </div>
                 
-                <ul  v-chat-scroll 
+                <ul
                 style="height:540px"
                 class="list-reset overflow-y-scroll relative " >
                     <li v-for="friend in friendForm" 
