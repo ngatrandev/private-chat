@@ -67,9 +67,15 @@
                     class="list-reset overflow-y-scroll ">
                          <li v-for="invite in invites" 
                             class="flex justify-between border-b border-grey-lighter font-serif px-2 py-2">{{invite.user1_name}}'s invitation
-                            <button @click.prevent="accept(invite.id, invite)" class="bg-blue hover:bg-blue-dark text-xs text-white text-font-bold py-1 px-1 rounded-full">
-                            Accept
-                            </button>
+                            <div>
+                                    <button @click.prevent="accept(invite.id, invite)" class="bg-blue hover:bg-blue-dark text-xs text-white text-font-bold py-1 px-1 rounded-full">
+                                    Accept
+                                    </button>
+                                    <button @click.prevent="decline(invite.id, invite)" class="bg-red hover:bg-red-dark text-xs text-white text-font-bold py-1 px-1 rounded-full">
+                                    Decline
+                                    </button>
+                            </div>
+                            
                         </li>
                     </ul>
                 </div>
@@ -147,6 +153,12 @@
             async accept(key, invite) {
             this.invites.splice(this.invites.indexOf(invite),1);//cách dùng splice để xóa data trong array
             await axios.patch('/sessions/'+key+'/update');
+                
+            },
+
+            async decline(key, invite) {
+            this.invites.splice(this.invites.indexOf(invite),1);//cách dùng splice để xóa data trong array
+            await axios.post('/sessions/'+key+'/decline');
                 
             },
           

@@ -56,6 +56,20 @@ class SessionController extends Controller
         
        
     }
+
+    public function decline(Session $session)    
+    {
+        $user=User::whereId($session->user1_id)->first();
+        $friend=User::whereId($session->user2_id)->first();
+
+        $user->notifications()->create([
+            'content' => "'$friend->name' declined your invitation."]);
+        event(new NotificationEvent($user->id));
+        $session->delete();
+
+        
+       
+    }
     
    
 

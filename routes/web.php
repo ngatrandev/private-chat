@@ -25,6 +25,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/user/{user}/storesession', 'SessionController@store');
 //Muốn dùng id của user để tương thích với Controller phải viết đúng {user}
 Route::patch('/sessions/{session}/update', 'SessionController@update');
+Route::post('/sessions/{session}/decline', 'SessionController@decline');
 
 Route::get('/getinvites', 'HomeController@getInvites');
 Route::get('/getfriends', 'HomeController@getFriends');

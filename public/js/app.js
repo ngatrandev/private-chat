@@ -2598,6 +2598,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['id', 'invites'],
   data: function data() {
@@ -2712,6 +2718,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return accept;
+    }(),
+    decline: function () {
+      var _decline = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(key, invite) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                this.invites.splice(this.invites.indexOf(invite), 1); //cách dùng splice để xóa data trong array
+
+                _context4.next = 3;
+                return axios.post('/sessions/' + key + '/decline');
+
+              case 3:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function decline(_x3, _x4) {
+        return _decline.apply(this, arguments);
+      }
+
+      return decline;
     }()
   }
 });
@@ -4015,6 +4048,59 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -64042,24 +64128,45 @@ var render = function() {
                     _vm._s(invite.user1_name) +
                       "'s invitation\n                        "
                   ),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "bg-blue hover:bg-blue-dark text-xs text-white text-font-bold py-1 px-1 rounded-full",
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.accept(invite.id, invite)
+                  _c("div", [
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "bg-blue hover:bg-blue-dark text-xs text-white text-font-bold py-1 px-1 rounded-full",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.accept(invite.id, invite)
+                          }
                         }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Accept\n                        "
-                      )
-                    ]
-                  )
+                      },
+                      [
+                        _vm._v(
+                          "\n                                Accept\n                                "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "bg-red hover:bg-red-dark text-xs text-white text-font-bold py-1 px-1 rounded-full",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.decline(invite.id, invite)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                Decline\n                                "
+                        )
+                      ]
+                    )
+                  ])
                 ]
               )
             }),
@@ -65787,7 +65894,7 @@ var render = function() {
           "div",
           {
             staticClass:
-              "flex justify-center px-1 py-3 items-center hover:bg-blue-light"
+              "flex relative justify-center px-1 py-3 items-center hover:bg-blue-light"
           },
           [
             _c(
@@ -65818,6 +65925,108 @@ var render = function() {
                   })
                 ])
               ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.btn3Alert,
+                    expression: "btn3Alert"
+                  }
+                ],
+                staticClass:
+                  " flex items-center feather feather-circle absolute z-10 pin-b pin-r mr-1 mb-1"
+              },
+              [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "h-4 w-4 fill-current text-red",
+                    staticStyle: {
+                      "enable-background": "new 0 0 511.999 511.999"
+                    },
+                    attrs: {
+                      version: "1.1",
+                      id: "Capa_1",
+                      xmlns: "http://www.w3.org/2000/svg",
+                      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                      x: "0px",
+                      y: "0px",
+                      viewBox: "0 0 511.999 511.999",
+                      "xml:space": "preserve"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      staticStyle: { fill: "#E50027" },
+                      attrs: {
+                        d:
+                          "M501.449,368.914L320.566,66.207C306.751,43.384,282.728,29.569,256,29.569\n                                s-50.752,13.815-64.567,36.638L10.55,368.914c-13.812,23.725-14.113,51.954-0.599,75.678c13.513,23.723,37.836,37.838,65.165,37.838\n                                h361.766c27.329,0,51.653-14.115,65.165-37.838C515.563,420.868,515.262,392.639,501.449,368.914z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#C1001F" },
+                      attrs: {
+                        d:
+                          "M502.049,444.592c-13.513,23.723-37.836,37.838-65.165,37.838H256V29.57\n                                c26.727,0,50.752,13.815,64.567,36.638L501.45,368.915C515.262,392.639,515.563,420.868,502.049,444.592z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#FD003A" },
+                      attrs: {
+                        d:
+                          "M75.109,452.4c-16.628,0-30.851-8.27-39.063-22.669c-8.211-14.414-8.065-31.087,0.469-45.72\n                                L217.23,81.549c8.27-13.666,22.816-21.951,38.769-21.951s30.5,8.284,38.887,22.157l180.745,302.49\n                                c8.388,14.4,8.534,31.072,0.322,45.485c-8.211,14.4-22.435,22.669-39.063,22.669H75.109V452.4z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#E50027" },
+                      attrs: {
+                        d:
+                          "M436.891,452.4c16.628,0,30.851-8.27,39.063-22.669c8.211-14.414,8.065-31.087-0.322-45.485\n                                L294.886,81.754c-8.388-13.871-22.933-22.157-38.887-22.157V452.4H436.891z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#E1E4FB" },
+                      attrs: {
+                        d:
+                          "M286.03,152.095v120.122c0,16.517-13.514,30.03-30.03,30.03s-30.031-13.514-30.031-30.03V152.095\n                                c0-16.517,13.514-30.031,30.031-30.031S286.03,135.578,286.03,152.095z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#C5C9F7" },
+                      attrs: {
+                        d:
+                          "M286.03,152.095v120.122c0,16.517-13.514,30.03-30.03,30.03V122.064\n                                C272.516,122.064,286.03,135.578,286.03,152.095z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#E1E4FB" },
+                      attrs: {
+                        d:
+                          "M256,332.278c-24.926,0-45.046,20.119-45.046,45.046c0,24.924,20.119,45.046,45.046,45.046\n                                s45.046-20.121,45.046-45.046C301.046,352.398,280.925,332.278,256,332.278z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#C5C9F7" },
+                      attrs: {
+                        d:
+                          "M301.046,377.323c0,24.924-20.119,45.046-45.046,45.046v-90.091\n                                C280.925,332.278,301.046,352.398,301.046,377.323z"
+                      }
+                    })
+                  ]
+                )
+              ]
             )
           ]
         ),
@@ -65826,7 +66035,7 @@ var render = function() {
           "div",
           {
             staticClass:
-              "flex justify-center px-1 py-3 items-center hover:bg-blue-light"
+              "flex relative justify-center px-1 py-3 items-center hover:bg-blue-light"
           },
           [
             _c(
@@ -65875,6 +66084,108 @@ var render = function() {
                     }
                   })
                 ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.btn4Alert,
+                    expression: "btn4Alert"
+                  }
+                ],
+                staticClass:
+                  " flex items-center feather feather-circle absolute z-10 pin-b pin-r mr-1 mb-1"
+              },
+              [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "h-4 w-4 fill-current text-red",
+                    staticStyle: {
+                      "enable-background": "new 0 0 511.999 511.999"
+                    },
+                    attrs: {
+                      version: "1.1",
+                      id: "Capa_1",
+                      xmlns: "http://www.w3.org/2000/svg",
+                      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                      x: "0px",
+                      y: "0px",
+                      viewBox: "0 0 511.999 511.999",
+                      "xml:space": "preserve"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      staticStyle: { fill: "#E50027" },
+                      attrs: {
+                        d:
+                          "M501.449,368.914L320.566,66.207C306.751,43.384,282.728,29.569,256,29.569\n                                s-50.752,13.815-64.567,36.638L10.55,368.914c-13.812,23.725-14.113,51.954-0.599,75.678c13.513,23.723,37.836,37.838,65.165,37.838\n                                h361.766c27.329,0,51.653-14.115,65.165-37.838C515.563,420.868,515.262,392.639,501.449,368.914z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#C1001F" },
+                      attrs: {
+                        d:
+                          "M502.049,444.592c-13.513,23.723-37.836,37.838-65.165,37.838H256V29.57\n                                c26.727,0,50.752,13.815,64.567,36.638L501.45,368.915C515.262,392.639,515.563,420.868,502.049,444.592z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#FD003A" },
+                      attrs: {
+                        d:
+                          "M75.109,452.4c-16.628,0-30.851-8.27-39.063-22.669c-8.211-14.414-8.065-31.087,0.469-45.72\n                                L217.23,81.549c8.27-13.666,22.816-21.951,38.769-21.951s30.5,8.284,38.887,22.157l180.745,302.49\n                                c8.388,14.4,8.534,31.072,0.322,45.485c-8.211,14.4-22.435,22.669-39.063,22.669H75.109V452.4z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#E50027" },
+                      attrs: {
+                        d:
+                          "M436.891,452.4c16.628,0,30.851-8.27,39.063-22.669c8.211-14.414,8.065-31.087-0.322-45.485\n                                L294.886,81.754c-8.388-13.871-22.933-22.157-38.887-22.157V452.4H436.891z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#E1E4FB" },
+                      attrs: {
+                        d:
+                          "M286.03,152.095v120.122c0,16.517-13.514,30.03-30.03,30.03s-30.031-13.514-30.031-30.03V152.095\n                                c0-16.517,13.514-30.031,30.031-30.031S286.03,135.578,286.03,152.095z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#C5C9F7" },
+                      attrs: {
+                        d:
+                          "M286.03,152.095v120.122c0,16.517-13.514,30.03-30.03,30.03V122.064\n                                C272.516,122.064,286.03,135.578,286.03,152.095z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#E1E4FB" },
+                      attrs: {
+                        d:
+                          "M256,332.278c-24.926,0-45.046,20.119-45.046,45.046c0,24.924,20.119,45.046,45.046,45.046\n                                s45.046-20.121,45.046-45.046C301.046,352.398,280.925,332.278,256,332.278z"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      staticStyle: { fill: "#C5C9F7" },
+                      attrs: {
+                        d:
+                          "M301.046,377.323c0,24.924-20.119,45.046-45.046,45.046v-90.091\n                                C280.925,332.278,301.046,352.398,301.046,377.323z"
+                      }
+                    })
+                  ]
+                )
               ]
             )
           ]
