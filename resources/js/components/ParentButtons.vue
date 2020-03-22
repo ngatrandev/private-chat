@@ -142,7 +142,10 @@
                     </div>
                 
             </div>
-            <div class="flex relative justify-center px-1 py-3 items-center hover:bg-blue-light">
+            <div 
+            @click.prevent="notifyClick"
+            :class="{'bg-blue-dark':buttonId==4}"
+            class="flex relative justify-center px-1 py-3 items-center hover:bg-blue-light">
                 <svg class="h-6 w-6 fill-current text-white" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     viewBox="0 0 456.727 456.727" style="enable-background:new 0 0 456.727 456.727;" xml:space="preserve">
                         <g>
@@ -156,7 +159,11 @@
                         </g>
                 </svg>
                 <div 
-                    v-show="btn4Alert"
+                v-show="notifyCount > 0"
+                class=" flex items-center feather feather-circle absolute z-10 text-xs text-red font-bold font-sans"
+                >{{notifyCount}}</div>
+                 <div 
+                    v-show="notifyCount > 0"
                     class=" flex items-center feather feather-circle absolute z-10 pin-b pin-r mr-1 mb-1">
                         <svg class="h-4 w-4 fill-current text-red" 
                             version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -202,6 +209,11 @@
         :click="teamClickCount"
         :active="buttonId==3"
         ></team-component>
+
+        <notify-component
+        v-show="buttonId == 4"
+        :notifications="notifications"
+         ></notify-component>
     </div>
 </template>
 
@@ -213,14 +225,13 @@ export default {
             buttonId: 1,
             chatClickCount:0,
             teamClickCount:0,
+            notifyCount:0,
+            notifications: '',
             inviteForm: '',
             btn1Alert: false,
             btn2Alert: false,
             btn3Alert: false,
-            btn4Alert: false,
-
-
-
+            
         }
     },
     methods: {
@@ -228,27 +239,47 @@ export default {
             this.buttonId = 1;
             this.chatClickCount++;
             this.btn1Alert = false;
+           
         },
 
         contactClick() {
             this.buttonId = 2;
             this.getInvites();
             this.btn2Alert = false;
+           
         },
 
         teamClick() {
             this.buttonId = 3;
             this.teamClickCount++;
             this.btn3Alert = false;
+           
+        },
+
+        notifyClick() {
+            this.buttonId = 4;
+            this.notifyCount=0;
+            this.getNotification();
+            
         },
 
         async getInvites() {
               this.inviteForm =(await axios.get('/getinvites')).data.data;
                 
         },
+
+        async getNotifyCount() {
+            this.notifyCount = (await axios.post(`user/${this.id}/count`)).data;
+         },
+
+        async getNotification() {
+            this.notifications = (await axios.post(`user/${this.id}/notifications`)).data.data;
+            await axios.post(`user/${this.id}/update`);
+         }
     },
 
     created() {
+        this.getNotifyCount();
         Echo.private('invite.'+this.id)
            .listen('InviteEvent', ()=>{
             this.btn2Alert = true;   
@@ -268,7 +299,13 @@ export default {
                    this.btn1Alert = true;  
                    this.btn3Alert = true;  
                }
-           }) 
+           })
+           .listen('NotificationEvent', (e)=>{
+               
+               if (this.id == e.id) {
+                   this.notifyCount++;
+               }
+           });
     }
 
 }

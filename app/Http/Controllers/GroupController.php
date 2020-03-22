@@ -35,6 +35,7 @@ class GroupController extends Controller
                 $member->notifications()->create([
                     'content' => "You've just created a group: '$groupName'."
                 ]);
+                event(new NotificationEvent($member->id));
                
             }
         };

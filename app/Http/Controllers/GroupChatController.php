@@ -182,6 +182,7 @@ class GroupChatController extends Controller
                 $user->notifications()->create([
                     'content' => "You've left '$groupName'."
                 ]);
+                event(new NotificationEvent($member->id));
                 
             }
         }

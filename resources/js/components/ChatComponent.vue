@@ -7,12 +7,6 @@
                 class="flex bg-grey-light font-serif justify-center py-2 border-r border-grey-lighter">
                     <div class="flex">
                         <h4>Chats</h4>
-                        <notification
-                        :id="id"
-                        class="px-1"
-                        align=left width="200px"
-                        >
-                        <span v-show="notification > 0">{{notification}}</span></notification>
                     </div>
                     
                 </div>
@@ -124,6 +118,7 @@
             v-for="group in groups"
             :key="group.id"
             :group="group"
+            :users="users"
             :isOpen="activeGroupId==group.id"
             :id="id"
             :route="route"

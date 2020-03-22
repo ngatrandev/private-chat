@@ -80,7 +80,7 @@
 import DropDown from './DropDown';
 import _ from 'lodash';
 export default {
-    props: ['group', 'isOpen', 'id', 'route'],
+    props: ['group', 'isOpen', 'id', 'route', 'users'],
     components: {DropDown},
     data() {
         return {
@@ -165,6 +165,16 @@ export default {
          await axios.post(`/group/${this.group.id}/user/${this.id}/leave`);
         },
 
+        checkOnline() {
+            this.group.members.forEach(member=> {
+                            this.users.forEach(user=> {
+                                if(user.id == member.id) {
+                                    member.online = true;
+                                }
+                            })
+                        });
+        }
+
     },
 
     created() {
@@ -248,6 +258,7 @@ export default {
             isOpen(isOpen) {
                 if (isOpen) {
                     this.getMessages();
+                    this.checkOnline();
                 } else {
                     this.chats = [];
                 }
